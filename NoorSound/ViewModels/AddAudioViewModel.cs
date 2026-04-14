@@ -22,12 +22,66 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         private string audioUrl;
 
+        [ObservableProperty]
+        private bool isBusy;
+
 
         public AddAudioViewModel(IDataService dataService, LibraryViewModel libraryViewModel)
         {
             _dataService = dataService;
             _libraryViewModel = libraryViewModel;
         }
+
+
+
+        [RelayCommand]
+        private async Task PickAudio()
+        {
+            try
+            {
+                var audioTypes = new FilePickerFileType(new Dictionary<DevicePlatform, IEnumerable<string>>
+                {
+                    { DevicePlatform.iOS, new[] { "public.audio" } },
+                    { DevicePlatform.Android, new[] { "audio/*" } },
+                    { DevicePlatform.WinUI, new[] { ".mp3", ".wav", ".m4a", ".aac" } },
+                    { DevicePlatform.macOS, new[] { "public.audio" } }
+                });
+
+                var result = await FilePicker.Default.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Select Audio",
+                    FileTypes = audioTypes
+                });
+
+                if (result != null)
+                {
+
+                    // In Shaa Allah, IsBusy = true, UI shows loading icon - IsBusy = false, loading icon dissaperes.
+                    // In Shaa Allah, the variable is used in a XAML file
+                    IsBusy = true;
+
+                    // ** (almost) Auto generated comment **
+                    // In Shaa Allah, this will open the selected audio file as a stream,
+                    // that can be uploaded to Supabase using the UploadFile method
+                    using var stream = await result.OpenReadAsync();
+
+                    // TODO: audio-files has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase
+                    AudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+            }
+            finally 
+            {
+                IsBusy = false;
+            }
+        }
+
+
+        [RelayCommand]
+        private async Task PickImage(){ }
 
         // Why private?
         // ** This response is (almost) generated - Don't know if it's correct **

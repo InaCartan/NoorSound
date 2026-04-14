@@ -10,5 +10,7 @@ namespace NoorSound.Services
         Task UpdateAudio(Audio audio);
         Task DeleteAudio(int id);
 
+        Task<string> UploadFile(Stream fileStream, string fileName, string bucket);
+
     }
 }

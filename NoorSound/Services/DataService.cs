@@ -1,4 +1,6 @@
-﻿using NoorSound.Models;
+﻿// ** BismiIllah Ar-Rahmaan Ar-Raheem ** \\
+
+using NoorSound.Models;
 using Supabase;
 
 
@@ -40,6 +42,25 @@ namespace NoorSound.Services
         public async Task DeleteAudio(int id)
         {
             await _supabaseClient.From<Audio>().Where(a => a.Id == id).Delete();
+        }
+
+        public async Task<string> UploadFile(Stream fileStream, string fileName, string bucket)
+        {
+            var path = $"{Guid.NewGuid()}_{fileName}";
+
+            // Converting Stream to byte array
+            // In Shaa Allah, hover the mouse on the code to see explanation
+            using var memoryStram = new MemoryStream();
+            await fileStream.CopyToAsync(memoryStram);
+            var bytes = memoryStram.ToArray();
+
+            // In Shaa Allah, uploading the file to Supabase
+            await _supabaseClient.Storage.From(bucket).Upload(bytes, path);
+
+            // In Shaa Allah, getting the public URL of the uploaded file
+            var publicUrl = _supabaseClient.Storage.From(bucket).GetPublicUrl(path);
+
+            return publicUrl;
         }
 
     }
