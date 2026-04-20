@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NoorSound.Views.AddAudioPage"
+             xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
+             x:DataType="viewmodel:AddAudioViewModel"
+             Title="AddAudioPage">
+    <VerticalStackLayout>
+        <Entry Placeholder="Audio name" Text="{Binding AudioName}" />
+        <Entry Placeholder="Your Admin name" Text="{Binding AdminName}" />
+        <Entry Placeholder="Image File" Text="{Binding ImageUrl}" />
+        <Entry Placeholder="Audio File" Text="{Binding AudioUrl}" />
+
+        <Button
+            Background="#3ece8e"
+            Command="{Binding AddAudioCommand}"
+            Text="BismiIllah"
+            TextColor= "DarkOrange" />
+    </VerticalStackLayout>
+</ContentPage>

@@ -49,7 +49,7 @@ namespace NoorSound.ViewModels
 
 
         // In Shaa Allah, this func navigates to AddAudioPage.xaml.cs (not the viewmodel)
-        // ** TODO: In Shaa Allah, add a xaml file that's used to add audios **
+        
         [RelayCommand]
         private async Task AddAudio() => await Shell.Current.GoToAsync("AddAudioPage");
 

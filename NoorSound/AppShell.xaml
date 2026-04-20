@@ -4,11 +4,21 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NoorSound"
+    xmlns:views="clr-namespace:NoorSound.Views"
     Title="NoorSound">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar>
+
+        <!-- Home -->
+        <ShellContent
+            Title="Home"
+            ContentTemplate="{DataTemplate views:HomePage}" />
+
+        <!-- Library -->
+        <ShellContent
+            Title="Library"
+            ContentTemplate="{DataTemplate views:LibraryPage}" />
+
+    </TabBar>
 
 </Shell>

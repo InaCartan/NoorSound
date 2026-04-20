@@ -65,7 +65,7 @@ namespace NoorSound.ViewModels
                     // that can be uploaded to Supabase using the UploadFile method
                     using var stream = await result.OpenReadAsync();
 
-                    // TODO: audio-files has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase
+                    // TODO: "audio-files" has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase
                     AudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
                 }
             }
@@ -81,7 +81,37 @@ namespace NoorSound.ViewModels
 
 
         [RelayCommand]
-        private async Task PickImage(){ }
+        private async Task PickImage()
+        {
+            try
+            {
+                var result = await FilePicker.Default.PickAsync(new PickOptions
+                {
+                    PickerTitle = "Select Image",
+                    FileTypes = FilePickerFileType.Images
+                });
+
+                if (result != null)
+                {
+                    IsBusy = true;
+
+                    using var stream = await result.OpenReadAsync();
+
+
+                    // TODO: "images" has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase.
+                    ImageUrl = await _dataService.UploadFile(stream, result.FileName, "images");
+                }
+            }    
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+            }
+            finally
+            {
+                IsBusy = false;
+            }
+
+        }
 
         // Why private?
         // ** This response is (almost) generated - Don't know if it's correct **

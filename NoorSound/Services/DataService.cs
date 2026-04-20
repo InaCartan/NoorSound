@@ -49,12 +49,12 @@ namespace NoorSound.Services
             var path = $"{Guid.NewGuid()}_{fileName}";
 
             // Converting Stream to byte array
-            // In Shaa Allah, hover the mouse on the code to see explanation
+            // In Shaa Allah, hover over the code to see explanations
             using var memoryStram = new MemoryStream();
             await fileStream.CopyToAsync(memoryStram);
             var bytes = memoryStram.ToArray();
 
-            // In Shaa Allah, uploading the file to Supabase
+            // In Shaa Allah, this will uploade the file to Supabase
             await _supabaseClient.Storage.From(bucket).Upload(bytes, path);
 
             // In Shaa Allah, getting the public URL of the uploaded file
