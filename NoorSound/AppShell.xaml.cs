@@ -8,7 +8,13 @@ namespace NoorSound
         {
             InitializeComponent();
 
-            Routing.RegisterRoute("AddAudioPage", typeof(AddAudioPage));
+            RegisterForRoute<AddAudioPage>();
+            // RegisterForRoute<UpdateAudioPage>(); // In Shaa Allah, add such a page.
+        }
+
+        protected void RegisterForRoute<T>()
+        {
+            Routing.RegisterRoute(typeof(T).Name, typeof(T));
         }
     }
 }

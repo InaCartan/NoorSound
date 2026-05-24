@@ -12,20 +12,29 @@ namespace NoorSound.ViewModels
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
-        public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
+        public ObservableCollection<Audio> Audios { get; set; } = new();
+
 
         public LibraryViewModel(IDataService dataService)
         {
             _dataService = dataService;
+
+            //// Listen for navigation events to refresh the audio list
+            //Shell.Current.Navigated += (sender, args) =>
+            //{
+            //    if (args.Source == ShellNavigationSource.Pop && args.Current?.Location.OriginalString.Contains("LibraryPage") == true)
+            //    {
+            //        MainThread.BeginInvokeOnMainThread(async () => await GetAudio());
+            //    }
+            //};
         }
-
-
 
 
         [RelayCommand]
         public async Task GetAudio()
         {
-            Audios.Clear(); // (auto generated comment) Clear the existing collection to avoid duplicates
+            Audios.Clear(); // (almost auto generated comment) In Shaa Allah, ".Clear" clear the existing collection thus avoiding duplicates
+            // Audios [ 1,2,3,4,5]
 
             try
             {
@@ -34,7 +43,7 @@ namespace NoorSound.ViewModels
                 {
                     foreach (var audio in audios)
                     {
-                        Audios.Add(audio);
+                        Audios.Add(audio); // [1,2,3,4,5,6,7,8,1,10,11,2]
                     }
                 }
             }
@@ -51,15 +60,17 @@ namespace NoorSound.ViewModels
         // In Shaa Allah, this func navigates to AddAudioPage.xaml.cs (not the viewmodel)
         
         [RelayCommand]
-        private async Task AddAudio() => await Shell.Current.GoToAsync("AddAudioPage");
-
+        private async Task AddAudio()
+        {
+            await Shell.Current.GoToAsync("AddAudioPage");
+        }
 
 
 
         [RelayCommand]
         private async Task DeleteAudio(Audio audio)
         {
-            var result = await Shell.Current.DisplayAlertAsync("Delete", $"Are you sure you want to remove from the list: \"{audio.AudioName}\"?", "Yes", "No");
+            var result = await Shell.Current.DisplayAlertAsync("Delete", $"Are you sure you want to remove from the playlist: \"{audio.AudioName}\"?", "Yes", "No");
 
             if (result is true)
             {

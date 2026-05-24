@@ -3,9 +3,8 @@
 namespace NoorSound.Services
 {
     public interface IDataService
-    {
-        
-        Task AddAudio(Audio audio);
+    {   
+        Task AddAudio(AudioInsert audio);
         Task <IEnumerable<Audio>> GetAudios();
         Task UpdateAudio(Audio audio);
         Task DeleteAudio(int id);

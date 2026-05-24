@@ -5,6 +5,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:NoorSound"
     xmlns:views="clr-namespace:NoorSound.Views"
+    Shell.FlyoutBehavior="Disabled"
     Title="NoorSound">
 
     <TabBar>
@@ -12,12 +13,14 @@
         <!-- Home -->
         <ShellContent
             Title="Home"
-            ContentTemplate="{DataTemplate views:HomePage}" />
+            ContentTemplate="{DataTemplate views:HomePage}" 
+            Route="HomePage"/>
 
         <!-- Library -->
         <ShellContent
             Title="Library"
-            ContentTemplate="{DataTemplate views:LibraryPage}" />
+            ContentTemplate="{DataTemplate views:LibraryPage}"
+            Route="LibraryPage"/>
 
     </TabBar>
 

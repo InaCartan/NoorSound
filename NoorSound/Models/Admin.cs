@@ -6,7 +6,7 @@ using Postgrest.Models;
 
 namespace NoorSound.Models
 {
-    [Table("Admin")]
+    [Table("admin")]
     public class Admin : BaseModel
     {
      

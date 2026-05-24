@@ -24,20 +24,33 @@ namespace NoorSound
             // configure Supabase
             var url = SupabaseConfiq.SUPABASE_URL;
             var key = SupabaseConfiq.SUPABASE_KEY;
-            builder.Services.AddSingleton(provider => new Supabase.Client(url, key));
 
-            // add ViewModels
-            builder.Services.AddSingleton<HomeViewModel>();
+            builder.Services.AddSingleton(provider =>
+            {
+                var client = new Supabase.Client(url, key);
+                client.InitializeAsync().Wait();
+                return client;
+            });
+
+
+            // adding ViewModels
+            //builder.Services.AddSingleton<HomeViewModel>();
             builder.Services.AddSingleton<LibraryViewModel>();
             builder.Services.AddTransient<AddAudioViewModel>();
 
-            // add Views
+            // adding Views
             //builder.Services.AddSingleton<Homepage>();    
             builder.Services.AddSingleton<LibraryPage>();
-            builder.Services.AddSingleton<AddAudioPage>();
+            builder.Services.AddTransient<AddAudioPage>();
 
-            // add Data Service
+            // adding Data Service
             builder.Services.AddSingleton<IDataService, DataService>();
+
+            // adding Shell
+            builder.Services.AddSingleton<AppShell>();
+
+            
+
 
 
 #if DEBUG

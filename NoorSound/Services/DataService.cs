@@ -19,20 +19,22 @@ namespace NoorSound.Services
         }
         
         
-        public async Task AddAudio(Audio audio)
+        public async Task AddAudio(AudioInsert audio)
         {
-            await _supabaseClient.From<Audio>().Insert(audio);
+            await _supabaseClient.From<AudioInsert>().Insert(audio);
+            
         }
 
         public async Task<IEnumerable<Audio>> GetAudios()
         {
-            var response = await _supabaseClient.From<Audio>().Get();
+            var response = await _supabaseClient.From<Audio>().Get(); // In Shaa Allah, get all audios from Audio table 
             return response.Models.OrderByDescending(a => a.MadeAt);
         }
 
+
         public async Task UpdateAudio(Audio audio)
         {
-            await _supabaseClient.From<Audio>().Where(a => a.Id == audio.Id)
+            await _supabaseClient.From<Audio>().Where(a => a.Id == audio.Id) 
                 .Set(a => a.AudioName, audio.AudioName)
                 .Set(a => a.ImageUrl, audio.ImageUrl)
                 .Set(a => a.AudioUrl, audio.AudioUrl)

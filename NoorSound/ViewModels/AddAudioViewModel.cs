@@ -11,25 +11,26 @@ namespace NoorSound.ViewModels
         private readonly LibraryViewModel _libraryViewModel;
 
         [ObservableProperty]
-        private string audioName;
+        private string newAudioName;
 
         [ObservableProperty]
-        private string adminName;
+        private Admin newAdmin;
 
         [ObservableProperty]
-        private string imageUrl;
+        private string newImageUrl;
 
         [ObservableProperty]
-        private string audioUrl;
+        private string newAudioUrl;
 
         [ObservableProperty]
         private bool isBusy;
-
 
         public AddAudioViewModel(IDataService dataService, LibraryViewModel libraryViewModel)
         {
             _dataService = dataService;
             _libraryViewModel = libraryViewModel;
+            // (almost auto generated) In Shaa Allah ta'la, initialize the NewAdmin property to avoid null reference issues
+            NewAdmin = new Admin(); 
         }
 
 
@@ -63,10 +64,9 @@ namespace NoorSound.ViewModels
                     // ** (almost) Auto generated comment **
                     // In Shaa Allah, this will open the selected audio file as a stream,
                     // that can be uploaded to Supabase using the UploadFile method
-                    using var stream = await result.OpenReadAsync();
+                    using var stream = await result.OpenReadAsync(); 
 
-                    // TODO: "audio-files" has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase
-                    AudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
+                    NewAudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
                 }
             }
             catch (Exception ex)
@@ -97,9 +97,7 @@ namespace NoorSound.ViewModels
 
                     using var stream = await result.OpenReadAsync();
 
-
-                    // TODO: "images" has not been made in supabase bucket. In Shaa Allah, make a new bucket in supabase.
-                    ImageUrl = await _dataService.UploadFile(stream, result.FileName, "images");
+                    NewImageUrl = await _dataService.UploadFile(stream, result.FileName, "images");
                 }
             }    
             catch (Exception ex)
@@ -123,14 +121,15 @@ namespace NoorSound.ViewModels
         {
             try
             {
-                if (!string.IsNullOrEmpty(AudioName) && !string.IsNullOrEmpty(AudioUrl))
+                if (!string.IsNullOrEmpty(NewAudioName) && !string.IsNullOrEmpty(NewAudioUrl) && !string.IsNullOrEmpty(NewAdmin.Name))
                 {
 
-                    Audio audio = new Audio()
+                    AudioInsert audio = new AudioInsert()
                     {
-                        AudioName = AudioName,
-                        ImageUrl = ImageUrl,
-                        AudioUrl = AudioUrl
+                        AudioName = NewAudioName,
+                        ImageUrl = NewImageUrl,
+                        AudioUrl = NewAudioUrl,
+                        AdminId = 1 // In Shaa Allah, reference to an Audio with id=1 (use this for now)
                     };
 
                     await _dataService.AddAudio(audio);
