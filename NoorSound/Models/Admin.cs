@@ -11,7 +11,7 @@ namespace NoorSound.Models
     {
      
         [PrimaryKey("id", false)]
-        public int Id { get; set; }
+        public string Id { get; set; } 
 
         [Column("admin_name")]
         public string Name { get; set; }

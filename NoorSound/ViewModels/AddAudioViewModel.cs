@@ -8,12 +8,13 @@ namespace NoorSound.ViewModels
     public partial class AddAudioViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
+        private readonly IAuthService _authService;
         private readonly LibraryViewModel _libraryViewModel;
 
         [ObservableProperty]
         private string newAudioName;
 
-        [ObservableProperty]
+        [ObservableProperty] 
         private Admin newAdmin;
 
         [ObservableProperty]
@@ -129,7 +130,7 @@ namespace NoorSound.ViewModels
                         AudioName = NewAudioName,
                         ImageUrl = NewImageUrl,
                         AudioUrl = NewAudioUrl,
-                        AdminId = 1 // In Shaa Allah, reference to an Audio with id=1 (use this for now)
+                        AdminId = _authService.CurrentUserId()
                     };
 
                     await _dataService.AddAudio(audio);

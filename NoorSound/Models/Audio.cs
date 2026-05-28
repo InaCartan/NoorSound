@@ -31,9 +31,9 @@ namespace NoorSound.Models
 
 
         [Reference(typeof(Admin), includeInQuery: true)] // Foreign key to Admin
-        public Admin Admin { get; set; }
+        public Admin Admin { get; set; } 
 
-        
+
 
         [Column("made_at", ignoreOnInsert: true)]
         public DateTime MadeAt { get; set; }

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- BismiIllah Ar-Rahmaan Ar-Raheem -->
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="NoorSound.Views.LoginPage"
+             xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
+             x:DataType="viewmodel:LoginViewModel"
+             Title="LoginPage">
+
+    <ScrollView>
+
+            <VerticalStackLayout
+            Padding="30"
+            Spacing="20"
+            VerticalOptions="Center">
+
+                <!-- Title -->
+                <Label
+                Text="NoorSound"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+                <Label
+                Text="Login"
+                FontSize="20"
+                HorizontalOptions="Center" />
+
+
+
+                <!-- Email -->
+                <VerticalStackLayout Spacing="6">
+
+                    <Label
+                    Text="Email"
+                    FontAttributes="Bold" />
+
+                    <Entry
+                    Placeholder="Enter email"
+                    Keyboard="Email"
+                    Text="{Binding Email}" />
+
+                </VerticalStackLayout>
+
+
+            <!-- Password -->
+                <VerticalStackLayout Spacing="6">
+
+                    <Label
+                    Text="Password"
+                    FontAttributes="Bold" />
+
+                    <Entry
+                    Placeholder="Enter password"
+                    IsPassword="True"
+                    Text="{Binding Password}" />
+
+                </VerticalStackLayout>
+
+
+
+                <!-- Login Button -->
+                <Button
+                Text="Login"
+                HeightRequest="50"
+                Command="{Binding LoginCommand}" />
+
+
+
+                <!-- Signup Button -->
+                <Button
+                Text="Register a new account!"
+                Command="{Binding SignUpRedirectCommand}"
+                BackgroundColor="Transparent"
+                TextColor="DarkOrange" />
+
+
+
+                
+
+            </VerticalStackLayout>
+
+        </ScrollView>
+
+</ContentPage>

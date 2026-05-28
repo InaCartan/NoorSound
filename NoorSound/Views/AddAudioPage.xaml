@@ -5,8 +5,8 @@
 			 xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
              x:DataType="viewmodel:AddAudioViewModel"
              xmlns:model="clr-namespace:NoorSound.Models"
-
              Title="Add Audio">
+    
 	<ScrollView>
 		<VerticalStackLayout Padding="24" Spacing="16">
 

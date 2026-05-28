@@ -18,7 +18,7 @@ namespace NoorSound.Models
         public string AudioUrl { get; set; }
 
         [Column("admin_id")]
-        public int AdminId { get; set; }
+        public string AdminId { get; set; } 
 
     }
 }
