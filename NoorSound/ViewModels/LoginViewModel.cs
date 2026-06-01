@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using NoorSound.Models;
 using NoorSound.Services;
 using NoorSound.Views;
 
@@ -33,9 +32,8 @@ namespace NoorSound.ViewModels
             {
                 await _authService.SignIn(Email, Password);
 
-                // In Shaa Allah, switch app into main page (AppShell) after successful login
-                App.Current.Windows[0].Page =
-                     _serviceProvider.GetRequiredService<AppShell>();
+                NavigateTo<AppShell>();
+
             }
             catch (Exception ex)
             {
@@ -49,9 +47,8 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task SignUpRedirect()
         {
-            // In Shaa Allah, when not signing in, the user is outside the shell. (see navigation stack - i think?)
-            var page = _serviceProvider.GetRequiredService<SignUpPage>();
-            App.Current.Windows[0].Page = page;
+            NavigateTo<SignUpPage>();
+
         }
 
         [RelayCommand]
@@ -61,8 +58,7 @@ namespace NoorSound.ViewModels
             {
                 await _authService.SignUp(Email, Password, AdminName);
 
-                App.Current.Windows[0].Page =
-                    _serviceProvider.GetRequiredService<AppShell>();
+                NavigateTo<AppShell>();
             }
             catch (Exception ex)
             {
@@ -71,6 +67,21 @@ namespace NoorSound.ViewModels
                     ex.Message,
                     "OK");
             }
+        }
+
+        private void NavigateTo<TPage>()
+            where TPage : Page
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var window = App.Current?.Windows?.FirstOrDefault();
+
+                if (window == null)
+                    throw new Exception("No application window found.");
+
+                window.Page =
+                    _serviceProvider.GetRequiredService<TPage>();
+            });
         }
     }
 }

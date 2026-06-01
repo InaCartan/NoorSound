@@ -35,14 +35,14 @@ namespace NoorSound
 
             // adding ViewModels
             builder.Services.AddTransient<LoginViewModel>();
-            //builder.Services.AddSingleton<HomeViewModel>();
+            builder.Services.AddSingleton<HomeViewModel>();
             builder.Services.AddSingleton<LibraryViewModel>();
             builder.Services.AddTransient<AddAudioViewModel>();
 
             // adding Views
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<SignUpPage>();
-            //builder.Services.AddSingleton<Homepage>();    
+            builder.Services.AddSingleton<HomePage>();    
             builder.Services.AddSingleton<LibraryPage>();
             builder.Services.AddTransient<AddAudioPage>();
 

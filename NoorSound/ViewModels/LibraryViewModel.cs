@@ -9,41 +9,39 @@ namespace NoorSound.ViewModels
     public partial class LibraryViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
+        private readonly IAuthService _authService;
+
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
         public ObservableCollection<Audio> Audios { get; set; } = new();
 
 
-        public LibraryViewModel(IDataService dataService)
+        public LibraryViewModel(IDataService dataService, IAuthService authService)
         {
             _dataService = dataService;
-
-            //// Listen for navigation events to refresh the audio list
-            //Shell.Current.Navigated += (sender, args) =>
-            //{
-            //    if (args.Source == ShellNavigationSource.Pop && args.Current?.Location.OriginalString.Contains("LibraryPage") == true)
-            //    {
-            //        MainThread.BeginInvokeOnMainThread(async () => await GetAudio());
-            //    }
-            //};
+            _authService = authService;
         }
 
 
         [RelayCommand]
-        public async Task GetAudio()
+        public async Task LoadAudios()
         {
-            Audios.Clear(); // (almost auto generated comment) In Shaa Allah, ".Clear" clear the existing collection thus avoiding duplicates
-            // Audios [ 1,2,3,4,5]
-
             try
             {
-                var audios = await _dataService.GetAudios();
-                if (audios.Any())
+                Audios.Clear(); // (almost auto generated) In Shaa Allah, clear the existing collection, thus avoiding duplications
+
+                var userId = _authService.CurrentUserId();
+
+                var allAudios = await _dataService.GetAudios();
+
+                var myAudios = allAudios.Where(a => a.AdminId == userId);
+
+                if (myAudios.Any())
                 {
-                    foreach (var audio in audios)
+                    foreach (var audio in myAudios)
                     {
-                        Audios.Add(audio); // [1,2,3,4,5,6,7,8,1,10,11,2]
+                        Audios.Add(audio); 
                     }
                 }
             }
@@ -58,7 +56,6 @@ namespace NoorSound.ViewModels
 
 
         // In Shaa Allah, this func navigates to AddAudioPage.xaml.cs (not the viewmodel)
-        
         [RelayCommand]
         private async Task AddAudio()
         {
@@ -77,7 +74,7 @@ namespace NoorSound.ViewModels
                 try
                 {
                     await _dataService.DeleteAudio(audio.Id);
-                    await GetAudio(); // In Shaa Allah, refresh the list after a deletion
+                    await LoadAudios(); // In Shaa Allah, refresh the list after a deletion
                 }
                 catch (Exception ex)
                 {

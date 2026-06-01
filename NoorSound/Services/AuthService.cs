@@ -20,33 +20,31 @@ namespace NoorSound.Services
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password) || string.IsNullOrEmpty(adminName))
             {
-                await Shell.Current.DisplayAlertAsync("Error", "Remember to fill in all fields", "OK");
-                return;
+                throw new Exception("All fields must be filled");
             }
 
             
             // In Shaa Allah, this make a new user
             var response = await _supabaseClient.Auth.SignUp(email, password);
 
-            if (response == null)
-                throw new Exception("User could not be made");
+            if (string.IsNullOrWhiteSpace(response?.User?.Id))
+                throw new Exception("Signup failed: no valid user returned");
+            // 
+            /* The code above means the same as the code below:
+            if (response == null || response.User == null || string.IsNullOrWhiteSpace(response.User.Id))
+                throw new Exception("Signup failed: no valid user returned");
+            */
 
-            var user = response.User;
-
-            if (user == null || user.Id == null)
-                throw new Exception("User could not be made");
-
-
-            var admin = new Admin
+            var adminInsert = new AdminInsert
             {
-                Id = user.Id,
+                Id = response.User.Id,
                 Name = adminName
             };
 
             // In Shaa Allah, the new user will be inserted to the Admin table
             await _supabaseClient
-               .From<Admin>()
-               .Insert(admin);
+               .From<AdminInsert>()
+               .Insert(adminInsert);
 
 
         }

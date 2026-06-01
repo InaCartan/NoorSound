@@ -19,6 +19,27 @@ namespace NoorSound.ViewModels
         {
             _dataService = dataService;
         }
+
+        [RelayCommand]
+        public async Task LoadAudios()
+        {
+            try
+            {
+                Audios.Clear();
+
+                var audios = await _dataService.GetAudios();
+
+                foreach (var audio in audios)
+                {
+                    Audios.Add(audio);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+            }
+        }
+
     }
 }
 

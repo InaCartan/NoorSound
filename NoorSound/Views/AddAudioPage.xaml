@@ -14,9 +14,6 @@
 			<Entry Placeholder="Enter audio name"
                    Text="{Binding NewAudioName}" />
 
-			<Label Text="Admin Name" FontAttributes="Bold" />
-			<Entry Placeholder="Enter admin name"
-                   Text="{Binding NewAdmin.Name}" />
 
 			<!-- Image Picker -->
 			<Label Text="Cover Image" FontAttributes="Bold" />

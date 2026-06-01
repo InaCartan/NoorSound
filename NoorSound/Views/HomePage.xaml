@@ -2,7 +2,29 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NoorSound.Views.HomePage"
-             Title="HomePage">
+             xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
+             x:DataType="viewmodel:HomeViewModel"
+             xmlns:model="clr-namespace:NoorSound.Models"
+             Title="Home">
     
-        
+    <CollectionView ItemsSource="{Binding Audios}">
+
+        <CollectionView.ItemTemplate>
+            <DataTemplate x:DataType="model:Audio">
+
+                <VerticalStackLayout Padding="10">
+
+                    <Image Source="{Binding ImageUrl}" HeightRequest="200" />
+
+                    <Label Text="{Binding AudioName}" FontAttributes="Bold" />
+
+                    <Label Text="{Binding Admin.Name}" FontSize="12" />
+
+                </VerticalStackLayout>
+
+            </DataTemplate>
+        </CollectionView.ItemTemplate>
+
+    </CollectionView>
+
 </ContentPage>

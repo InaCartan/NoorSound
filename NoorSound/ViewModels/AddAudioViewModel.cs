@@ -14,8 +14,6 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         private string newAudioName;
 
-        [ObservableProperty] 
-        private Admin newAdmin;
 
         [ObservableProperty]
         private string newImageUrl;
@@ -26,12 +24,12 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         private bool isBusy;
 
-        public AddAudioViewModel(IDataService dataService, LibraryViewModel libraryViewModel)
+        public AddAudioViewModel(IDataService dataService, IAuthService authService, LibraryViewModel libraryViewModel)
         {
             _dataService = dataService;
+            _authService = authService;
             _libraryViewModel = libraryViewModel;
-            // (almost auto generated) In Shaa Allah ta'la, initialize the NewAdmin property to avoid null reference issues
-            NewAdmin = new Admin(); 
+            
         }
 
 
@@ -120,24 +118,35 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task AddAudio()
         {
+            var userId = _authService.CurrentUserId();
+
+            if (string.IsNullOrWhiteSpace(userId))
+            {
+                await Shell.Current.DisplayAlertAsync(
+                    "Error",
+                    "No authenticated user found.",
+                    "OK");
+
+                return;
+            }
+
             try
             {
-                if (!string.IsNullOrEmpty(NewAudioName) && !string.IsNullOrEmpty(NewAudioUrl) && !string.IsNullOrEmpty(NewAdmin.Name))
+                if (!string.IsNullOrWhiteSpace(NewAudioName) && !string.IsNullOrWhiteSpace(NewAudioUrl))
                 {
-
                     AudioInsert audio = new AudioInsert()
                     {
                         AudioName = NewAudioName,
                         ImageUrl = NewImageUrl,
                         AudioUrl = NewAudioUrl,
-                        AdminId = _authService.CurrentUserId()
+                        AdminId = userId
                     };
 
                     await _dataService.AddAudio(audio);
 
                     // In Shaa Allah, by getting the data from the db (using GetAudio), it will refresh the
                     // list of audios shown in the home view UI, after adding a new audio.
-                    await _libraryViewModel.GetAudio();
+                    await _libraryViewModel.LoadAudios();
 
                     // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
                     // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 

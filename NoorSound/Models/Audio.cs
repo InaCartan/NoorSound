@@ -27,7 +27,7 @@ namespace NoorSound.Models
 
 
         [Column("admin_id")]
-        public int AdminId { get; set; }
+        public string AdminId { get; set; }
 
 
         [Reference(typeof(Admin), includeInQuery: true)] // Foreign key to Admin
