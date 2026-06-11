@@ -19,6 +19,9 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         private string adminName;
 
+        [ObservableProperty]
+        private string errorMessage;
+
         public LoginViewModel(IAuthService authService, IServiceProvider serviceProvider)
         {
             _authService = authService;
@@ -33,14 +36,10 @@ namespace NoorSound.ViewModels
                 await _authService.SignIn(Email, Password);
 
                 NavigateTo<AppShell>();
-
             }
-            catch (Exception ex)
+            catch
             {
-                await Shell.Current.DisplayAlertAsync(
-                    "Error",
-                    ex.Message,
-                    "OK");
+                await ShowError("Something went wrong, did you type a valid email or password?");
             }
         }
 
@@ -62,26 +61,31 @@ namespace NoorSound.ViewModels
             }
             catch (Exception ex)
             {
-                await Shell.Current.DisplayAlertAsync(
-                    "Error",
-                    ex.Message,
-                    "OK");
+                await ShowError("Something went wrong, have you already signed up?");
             }
         }
 
-        private void NavigateTo<TPage>()
-            where TPage : Page
+        private void NavigateTo<TPage>() where TPage : Page
         {
             MainThread.BeginInvokeOnMainThread(() =>
             {
-                var window = App.Current?.Windows?.FirstOrDefault();
+                var window = Application.Current?.Windows?.FirstOrDefault();
 
                 if (window == null)
-                    throw new Exception("No application window found.");
+                    return;
 
-                window.Page =
-                    _serviceProvider.GetRequiredService<TPage>();
+                window.Page = _serviceProvider.GetRequiredService<TPage>();
             });
+        }
+
+        private async Task ShowError(string message)
+        {
+            var page = Application.Current?.Windows?.FirstOrDefault()?.Page as Page;
+
+            if (page != null)
+            {
+                await page.DisplayAlertAsync("Whoops", message, "OK");
+            }
         }
     }
 }
