@@ -9,16 +9,16 @@ namespace NoorSound.Models
     public class AudioInsert : BaseModel
     {
         [Column("audio_name")]
-        public string AudioName { get; set; }
+        public string AudioName { get; set; } = string.Empty;
 
         [Column("image_url")]
-        public string ImageUrl { get; set; }
+        public string ImageUrl { get; set; } = string.Empty;
 
         [Column("audio_url")]
-        public string AudioUrl { get; set; }
+        public string AudioUrl { get; set; } = string.Empty;
 
         [Column("admin_id")]
-        public string AdminId { get; set; } 
+        public string? AdminId { get; set; } 
 
     }
 }

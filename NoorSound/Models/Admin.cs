@@ -11,13 +11,13 @@ namespace NoorSound.Models
     {
      
         [PrimaryKey("id", false)]
-        public string Id { get; set; } 
+        public string Id { get; set; } = string.Empty;
 
         [Column("admin_name")]
-        public string Name { get; set; }
+        public string Name { get; set; } = string.Empty;
 
         [Column("admin_image_url")]
-        public string AdminImageUrl { get; set; }
+        public string? AdminImageUrl { get; set; }
 
 
         [Column("made_at", ignoreOnInsert: true)]

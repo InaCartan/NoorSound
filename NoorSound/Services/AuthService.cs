@@ -28,15 +28,9 @@ namespace NoorSound.Services
             var response = await _supabaseClient.Auth.SignUp(email, password);
 
 
-
-            // The code below means the same as the current code:
-            // if (response == null || response.User == null || string.IsNullOrWhiteSpace(response.User.Id))
-            //     throw new Exception("Signup failed: no valid user returned");
-            
-            if (string.IsNullOrWhiteSpace(response?.User?.Id))
+            if (response == null || response.User == null || string.IsNullOrWhiteSpace(response.User.Id))
                 throw new Exception("Signup failed: no valid user returned");
             
-
             var adminInsert = new AdminInsert
             {
                 Id = response.User.Id,
@@ -45,20 +39,21 @@ namespace NoorSound.Services
 
             
             await _supabaseClient
-               .From<AdminInsert>()
+               .From<AdminInsert>() 
                .Insert(adminInsert);
 
 
         }
 
-        public async Task SignIn(string email, string password)
+        public async Task LogIn(string email, string password)
         {
 
             if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             {
                 throw new Exception("All fields must be filled");
             }
-                await _supabaseClient.Auth.SignIn(email, password);            
+
+            await _supabaseClient.Auth.SignIn(email, password); //if an exception is thrown, viewModel will In Shaa Allah ta'ala catch it. 
         }
 
         public async Task SignOut()

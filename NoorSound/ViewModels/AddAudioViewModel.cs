@@ -11,18 +11,18 @@ namespace NoorSound.ViewModels
         private readonly IAuthService _authService;
         private readonly LibraryViewModel _libraryViewModel;
 
-        [ObservableProperty]
-        private string newAudioName;
-
 
         [ObservableProperty]
-        private string newImageUrl;
+        public required partial string NewAudioName { get; set; }
 
         [ObservableProperty]
-        private string newAudioUrl;
+        public required partial string NewImageUrl { get; set; }
 
         [ObservableProperty]
-        private bool isBusy;
+        public required partial string NewAudioUrl { get; set; }
+
+        [ObservableProperty]
+        public required partial bool IsBusy { get; set; }
 
         public AddAudioViewModel(IDataService dataService, IAuthService authService, LibraryViewModel libraryViewModel)
         {

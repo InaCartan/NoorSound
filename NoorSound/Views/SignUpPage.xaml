@@ -79,6 +79,12 @@
             BackgroundColor="Transparent"
             TextColor="DarkOrange" />
 
+            <Button
+            Text="Already have an account?"
+            Command="{Binding LogInRedirectCommand}"
+            BackgroundColor="Transparent"
+            TextColor="DarkOrange" />
+
         </VerticalStackLayout>
 
     </ScrollView>

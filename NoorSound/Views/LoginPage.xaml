@@ -65,7 +65,7 @@
                 <Button
                 Text="Login"
                 HeightRequest="50"
-                Command="{Binding LoginCommand}" />
+                Command="{Binding LogInCommand}" />
 
 
 

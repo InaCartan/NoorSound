@@ -8,19 +8,19 @@ namespace NoorSound.ViewModels
     public partial class LoginViewModel : ObservableObject
     {
         private readonly IAuthService _authService;
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IServiceProvider _serviceProvider; 
 
         [ObservableProperty]
-        private string email;
+        public partial string Email { get; set; } = string.Empty;
 
         [ObservableProperty]
-        private string password;
+        public partial string Password { get; set; } = string.Empty;
 
         [ObservableProperty]
-        private string adminName;
+        public partial string AdminName { get; set; } = string.Empty;
 
         [ObservableProperty]
-        private string errorMessage;
+        public partial string ErrorMessage { get; set; } = string.Empty;
 
         public LoginViewModel(IAuthService authService, IServiceProvider serviceProvider)
         {
@@ -29,26 +29,20 @@ namespace NoorSound.ViewModels
         }
 
         [RelayCommand]
-        private async Task Login()
+        private async Task LogIn()
         {
             try
             {
-                await _authService.SignIn(Email, Password);
+                await _authService.LogIn(Email, Password);
 
                 NavigateTo<AppShell>();
             }
             catch
             {
-                await ShowError("Something went wrong, did you type a valid email or password?");
+                await ShowError("Email or password is wrong.");
             }
         }
 
-        [RelayCommand]
-        private async Task SignUpRedirect()
-        {
-            NavigateTo<SignUpPage>();
-
-        }
 
         [RelayCommand]
         private async Task SignUp()
@@ -59,11 +53,27 @@ namespace NoorSound.ViewModels
 
                 NavigateTo<AppShell>();
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
-                await ShowError("Something went wrong, have you already signed up?");
+                await ShowError(ex.Message);
             }
         }
+
+
+
+        [RelayCommand]
+        private async Task SignUpRedirect()
+        {
+            NavigateTo<SignUpPage>();
+        }
+
+        [RelayCommand]
+        private async Task LogInRedirect()
+        {
+            NavigateTo<LoginPage>();
+        }
+
+
 
         private void NavigateTo<TPage>() where TPage : Page
         {
