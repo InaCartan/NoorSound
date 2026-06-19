@@ -49,6 +49,9 @@ namespace NoorSound
             // adding Services
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
+            builder.Services.AddSingleton<IDialogService, DialogService>();
+
 
             // adding Shell
             builder.Services.AddSingleton<AppShell>();

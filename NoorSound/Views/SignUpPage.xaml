@@ -42,6 +42,11 @@
                 Keyboard="Email"
                 Text="{Binding Email}" />
 
+                <Label 
+                Text="{Binding EmailError}" 
+                TextColor="Red" 
+                FontSize="12"/>
+
             </VerticalStackLayout>
 
             <!-- Admin Name -->
@@ -54,6 +59,11 @@
                 <Entry
                 Placeholder="Enter admin name"
                 Text="{Binding AdminName}" />
+
+                <Label
+                    Text="{Binding AdminNameError}"
+                    TextColor="Red"
+                    FontSize="12" />
 
             </VerticalStackLayout>
 
@@ -68,6 +78,11 @@
                 Placeholder="Enter password"
                 IsPassword="True"
                 Text="{Binding Password}" />
+
+                <Label
+                    Text="{Binding PasswordError}"
+                    TextColor="Red"
+                    FontSize="12" />
 
             </VerticalStackLayout>
 

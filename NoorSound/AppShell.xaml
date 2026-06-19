@@ -8,6 +8,17 @@
     Shell.FlyoutBehavior="Disabled"
     Title="NoorSound">
 
+    <!-- Login & SignUp -->
+    <ShellContent
+        Route="LoginPage"
+        ContentTemplate="{DataTemplate views:LoginPage}" />
+
+    <ShellContent
+        Route="SignUpPage"
+        ContentTemplate="{DataTemplate views:SignUpPage}" />
+
+
+
     <TabBar>
 
         <!-- Home -->

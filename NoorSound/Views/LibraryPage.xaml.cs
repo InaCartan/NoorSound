@@ -1,12 +1,10 @@
 // ** BismiIllah Ar-Rahmaan Ar-Raheem ** \\
 using NoorSound.ViewModels;
 
-
 namespace NoorSound.Views;
 
 public partial class LibraryPage : ContentPage
 {
-
 	private readonly LibraryViewModel _vm;
 
 	public LibraryPage(LibraryViewModel vm)

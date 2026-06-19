@@ -42,7 +42,12 @@
                     Keyboard="Email"
                     Text="{Binding Email}" />
 
-                </VerticalStackLayout>
+                    <Label 
+                        Text="{Binding EmailError}" 
+                        TextColor="Red" 
+                        FontSize="12"/>
+
+            </VerticalStackLayout>
 
 
             <!-- Password -->
@@ -57,7 +62,12 @@
                     IsPassword="True"
                     Text="{Binding Password}" />
 
-                </VerticalStackLayout>
+                <Label 
+                    Text="{Binding PasswordError}" 
+                    TextColor="Red" 
+                    FontSize="12"/>
+
+            </VerticalStackLayout>
 
 
 

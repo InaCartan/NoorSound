@@ -1,20 +1,40 @@
-﻿using NoorSound.Views;
+﻿using NoorSound.Services;
+using NoorSound.Views;
 
 namespace NoorSound
 {
     public partial class AppShell : Shell
     {
-        public AppShell()
+
+        private readonly IAuthService _authService;
+
+        public AppShell(IAuthService authService)
         {
             InitializeComponent();
+            _authService = authService;
 
-            RegisterForRoute<AddAudioPage>();
-            // RegisterForRoute<UpdateAudioPage>(); // In Shaa Allah, add such a page.
+            Loaded += OnLoaded;
+
+           
         }
 
-        protected void RegisterForRoute<T>()
+        private async void OnLoaded(object? sender, EventArgs e)
         {
-            Routing.RegisterRoute(typeof(T).Name, typeof(T));
+            if (_authService.CurrentUser() == null)
+            {
+                await GoToAsync("//LoginPage");
+
+                Shell.Current.FlyoutBehavior = FlyoutBehavior.Disabled;
+            }
+            else
+            {
+                await GoToAsync("//HomePage");
+
+                Shell.Current.FlyoutBehavior = FlyoutBehavior.Disabled;
+            }
         }
+
+        
+
     }
 }

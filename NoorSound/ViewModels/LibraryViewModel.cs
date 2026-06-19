@@ -10,6 +10,8 @@ namespace NoorSound.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IAuthService _authService;
+        private readonly INavigationService _navigationService;
+        private readonly IDialogService _dialogService;
 
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
@@ -17,10 +19,16 @@ namespace NoorSound.ViewModels
         public ObservableCollection<Audio> Audios { get; set; } = new();
 
 
-        public LibraryViewModel(IDataService dataService, IAuthService authService)
+        public LibraryViewModel(
+            IDataService dataService, 
+            IAuthService authService, 
+            INavigationService navigationService,
+            IDialogService dialogService)
         {
             _dataService = dataService;
             _authService = authService;
+            _navigationService = navigationService;
+            _dialogService = dialogService;
         }
 
 
@@ -29,7 +37,7 @@ namespace NoorSound.ViewModels
         {
             try
             {
-                Audios.Clear(); // (almost auto generated) In Shaa Allah, clear the existing collection, thus avoiding duplications
+                Audios.Clear(); 
 
                 var userId = _authService.CurrentUserId();
 
@@ -46,9 +54,9 @@ namespace NoorSound.ViewModels
                 }
             }
 
-            catch (Exception ex)
+            catch
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await _dialogService.ShowAlert("Error", "Unable to load audios");
             }
         }
 
@@ -59,7 +67,7 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task AddAudio()
         {
-            await Shell.Current.GoToAsync("AddAudioPage");
+            await _navigationService.GoToAsync("AddAudioPage");
         }
 
 
@@ -67,18 +75,21 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task DeleteAudio(Audio audio)
         {
-            var result = await Shell.Current.DisplayAlertAsync("Delete", $"Are you sure you want to remove from the playlist: \"{audio.AudioName}\"?", "Yes", "No");
+            bool confirmed = await _dialogService.ShowConfirmation(
+             "Delete",
+             $"Are you sure you want to remove \"{audio.AudioName}\"?");
 
-            if (result is true)
+
+            if (confirmed)
             {
                 try
                 {
                     await _dataService.DeleteAudio(audio.Id);
                     await LoadAudios(); // In Shaa Allah, refresh the list after a deletion
                 }
-                catch (Exception ex)
+                catch 
                 {
-                    await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                    await _dialogService.ShowAlert("Error", "Unable to delete audio");
                 }
             }
 
