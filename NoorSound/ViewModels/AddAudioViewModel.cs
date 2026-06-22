@@ -9,7 +9,8 @@ namespace NoorSound.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IAuthService _authService;
-        private readonly LibraryViewModel _libraryViewModel;
+        private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
 
 
         [ObservableProperty]
@@ -24,12 +25,17 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         public required partial bool IsBusy { get; set; }
 
-        public AddAudioViewModel(IDataService dataService, IAuthService authService, LibraryViewModel libraryViewModel)
+        public AddAudioViewModel(
+            IDataService dataService, 
+            IAuthService authService, 
+            LibraryViewModel libraryViewModel,
+            IDialogService dialogService,
+            INavigationService navigationService)
         {
             _dataService = dataService;
             _authService = authService;
-            _libraryViewModel = libraryViewModel;
-            
+            _dialogService = dialogService;
+            _navigationService = navigationService;
         }
 
 
@@ -68,9 +74,12 @@ namespace NoorSound.ViewModels
                     NewAudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await _dialogService.ShowAlert(
+                    "Whoops...", 
+                    "Unable to load the audio. Did you choose a valid file (must be MP3, WAV, M4A or AAC)"
+                    );
             }
             finally 
             {
@@ -99,9 +108,12 @@ namespace NoorSound.ViewModels
                     NewImageUrl = await _dataService.UploadFile(stream, result.FileName, "images");
                 }
             }    
-            catch (Exception ex)
+            catch
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await _dialogService.ShowAlert(
+                    "Whoops...", 
+                    "Unable to load the picture. Did you choose a valid file (must be an image file)"
+                    );
             }
             finally
             {
@@ -122,45 +134,40 @@ namespace NoorSound.ViewModels
 
             if (string.IsNullOrWhiteSpace(userId))
             {
-                await Shell.Current.DisplayAlertAsync(
-                    "Error",
-                    "No authenticated user found.",
-                    "OK");
+                await _dialogService.ShowAlert(
+                    "Whoops...", 
+                    "Sorry, you need to have an account to upload audios. It's free to sign up!"
+                    );
 
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(NewAudioName) || string.IsNullOrWhiteSpace(NewAudioUrl))
+            {
+                await _dialogService.ShowAlert("Whoops...", "Remember to fill all required fields");
                 return;
             }
 
             try
             {
-                if (!string.IsNullOrWhiteSpace(NewAudioName) && !string.IsNullOrWhiteSpace(NewAudioUrl))
+                AudioInsert audio = new AudioInsert()
                 {
-                    AudioInsert audio = new AudioInsert()
-                    {
-                        AudioName = NewAudioName,
-                        ImageUrl = NewImageUrl,
-                        AudioUrl = NewAudioUrl,
-                        AdminId = userId
-                    };
+                    AudioName = NewAudioName,
+                    ImageUrl = NewImageUrl,
+                    AudioUrl = NewAudioUrl,
+                    AdminId = userId
+                };
 
-                    await _dataService.AddAudio(audio);
+                await _dataService.AddAudio(audio);
 
-                    // In Shaa Allah, by getting the data from the db (using GetAudio), it will refresh the
-                    // list of audios shown in the home view UI, after adding a new audio.
-                    await _libraryViewModel.LoadAudios();
+                // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
+                // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 
+                await _navigationService.GoBackAsync();
 
-                    // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
-                    // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 
-                    await Shell.Current.GoToAsync(".."); 
-                }
-                else
-                {
-                    await Shell.Current.DisplayAlertAsync("Error", "Remember to fill all required fields", "OK");
-                }
-                
             }
-            catch (Exception ex)
+            catch
             {
-                await Shell.Current.DisplayAlertAsync("Error", ex.Message, "OK");
+                await _dialogService.ShowAlert("Hmm...", "Something didn't work, try again");
             }
 
 

@@ -11,7 +11,7 @@ namespace NoorSound.Services
             if (Shell.Current == null)
                 return;
 
-            await Shell.Current.GoToAsync(route);
+            await Shell.Current.GoToAsync(route); 
         }
 
         public async Task GoBackAsync()

@@ -4,6 +4,7 @@ using NoorSound.Services;
 using NoorSound.Models;
 using System.Collections.ObjectModel;
 
+
 namespace NoorSound.ViewModels
 {
     public partial class LibraryViewModel : ObservableObject
@@ -16,7 +17,7 @@ namespace NoorSound.ViewModels
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
-        public ObservableCollection<Audio> Audios { get; set; } = new();
+        public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
 
 
         public LibraryViewModel(
@@ -56,7 +57,7 @@ namespace NoorSound.ViewModels
 
             catch
             {
-                await _dialogService.ShowAlert("Error", "Unable to load audios");
+                await _dialogService.ShowAlert("Hmmm...Error", "Unable to load audios, try to refresh page");
             }
         }
 
@@ -67,7 +68,7 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task AddAudio()
         {
-            await _navigationService.GoToAsync("AddAudioPage");
+            await _navigationService.GoToAsync(AppRoutes.AddAudio);
         }
 
 
@@ -85,11 +86,11 @@ namespace NoorSound.ViewModels
                 try
                 {
                     await _dataService.DeleteAudio(audio.Id);
-                    await LoadAudios(); // In Shaa Allah, refresh the list after a deletion
+                    await LoadAudios(); // In Shaa Allah, method refresh the list after a deletion
                 }
                 catch 
                 {
-                    await _dialogService.ShowAlert("Error", "Unable to delete audio");
+                    await _dialogService.ShowAlert("Hmmm...Error", "Unable to delete audio, try one more time.");
                 }
             }
 

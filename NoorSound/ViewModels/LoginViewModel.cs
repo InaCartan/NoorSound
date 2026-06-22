@@ -1,15 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Services;
-using NoorSound.Views;
+
 
 namespace NoorSound.ViewModels
 {
     public partial class LoginViewModel : ObservableObject
     {
         private readonly IAuthService _authService;
-        //private readonly IServiceProvider _serviceProvider;
-        private readonly IDialogService _dialogService;
         private readonly INavigationService _navigationService;
 
 
@@ -37,15 +35,9 @@ namespace NoorSound.ViewModels
         //[ObservableProperty]
         //public partial string ErrorMessage { get; set; } = string.Empty;
 
-        public LoginViewModel(
-            IAuthService authService, 
-           // IServiceProvider serviceProvider, 
-            IDialogService dialogService,
-            INavigationService navigationService)
+        public LoginViewModel(IAuthService authService, INavigationService navigationService)
         {
-            _authService = authService;
-           // _serviceProvider = serviceProvider;
-            _dialogService = dialogService;
+            _authService = authService; 
             _navigationService = navigationService;
         }
 
@@ -169,29 +161,5 @@ namespace NoorSound.ViewModels
             AdminNameError = string.Empty;
         }
     }
-
-
-    //private void NavigateTo<TPage>() where TPage : Page
-    //{
-    //    MainThread.BeginInvokeOnMainThread(() =>
-    //    {
-    //        var window = Application.Current?.Windows?.FirstOrDefault();
-
-    //        if (window == null)
-    //            return;
-
-    //        window.Page = _serviceProvider.GetRequiredService<TPage>();
-    //    });
-    //}
-
-    //private async Task ShowError(string message)
-    //{
-    //    var page = Application.Current?.Windows?.FirstOrDefault()?.Page as Page; 
-
-    //    if (page != null) 
-    //    {
-    //        await page.DisplayAlertAsync("Whoops", message, "OK");
-    //    }
-    //}
 }
 
