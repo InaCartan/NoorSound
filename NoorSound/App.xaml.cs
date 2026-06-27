@@ -1,39 +1,29 @@
-﻿using NoorSound.Views;
+﻿using NoorSound.Services;
+using Supabase;
 
 namespace NoorSound
 {
     public partial class App : Application
     {
         private readonly IServiceProvider _serviceProvider;
-        //private readonly Supabase.Client _supabase;
+        private readonly IStartupService _startupService;
 
-
-        public App(IServiceProvider serviceProvider)
+        public App(IServiceProvider serviceProvider, IStartupService startupService)
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
-            // _supabase = supabase;
+            _startupService = startupService;
+
+
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            //Page startPage;
+            _startupService.InitializeAsync().GetAwaiter().GetResult();
 
-            //// In Shaa Allah, check if user already logged in
-            //if (_supabase.Auth.CurrentSession != null)
-            //{
-            //    startPage = _serviceProvider
-            //        .GetRequiredService<AppShell>();
-            //}
-            //else
-            //{
-            //    startPage = _serviceProvider
-            //        .GetRequiredService<LoginPage>();
-            //}
+            var shell = _serviceProvider.GetRequiredService<AppShell>();
 
-            //return new Window(startPage);
-
-            return new Window(_serviceProvider.GetRequiredService<AppShell>());
+            return new Window(shell);
 
         }
 

@@ -1,4 +1,5 @@
 ﻿// ** BismiIllah Ar-Rahmaan Ar-Raheem ** \\
+
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
 using NoorSound.Models;
@@ -20,16 +21,15 @@ namespace NoorSound
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             }).UseMauiCommunityToolkit();
 
-            // In Shaa Allah
+            // In Shaa Allah these are the following steps that the program will start with:
+
             // configure Supabase
             var url = SupabaseConfiq.SUPABASE_URL;
             var key = SupabaseConfiq.SUPABASE_KEY;
 
             builder.Services.AddSingleton(provider =>
             {
-                var client = new Supabase.Client(url, key);
-                client.InitializeAsync().Wait();
-                return client;
+                return new Supabase.Client(url, key);
             });
 
 
@@ -51,18 +51,17 @@ namespace NoorSound
             builder.Services.AddSingleton<IAuthService, AuthService>();
             builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IDialogService, DialogService>();
+            builder.Services.AddSingleton<IStartupService, StartupService>();
 
 
             // adding Shell
             builder.Services.AddSingleton<AppShell>();
 
-            
-
-
 
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
+
             return builder.Build();
         }
     }
