@@ -3,6 +3,7 @@
 using NoorSound.Models;
 using Supabase;
 
+
 namespace NoorSound.Services
 {
     public class AuthService : IAuthService
@@ -17,25 +18,26 @@ namespace NoorSound.Services
 
 
         public async Task SignUp(string email, string password, string adminName)
-        { 
-            // In Shaa Allah ta'ala, this make a new user
-            var response = await _supabaseClient.Auth.SignUp(email, password);
-
-
-            if (response == null || response.User == null || string.IsNullOrWhiteSpace(response.User.Id))
-                throw new Exception("Signup failed: no valid user returned"); //In Shaa Allah ta'ala, this exception is to developer. (users can't see it)
-            
-            var adminInsert = new AdminInsert
+        {
+            var options = new Supabase.Gotrue.SignUpOptions
             {
-                Id = response.User.Id,
-                Name = adminName
+                Data = new Dictionary<string, object>
+                {
+                    ["admin_name"] = adminName.Trim()
+                }
             };
 
-            
-            await _supabaseClient
-               .From<AdminInsert>() 
-               .Insert(adminInsert);
+            var response = await _supabaseClient.Auth.SignUp(
+                email.Trim(),
+                password,
+                options);
 
+            if (response?.User == null ||
+                string.IsNullOrWhiteSpace(response.User.Id))
+            {
+                throw new InvalidOperationException(
+                    "Signup failed: no valid user was returned.");
+            }
         }
 
         public async Task LogIn(string email, string password)

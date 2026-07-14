@@ -17,7 +17,6 @@ namespace NoorSound
 
             Routing.RegisterRoute(AppRoutes.AddAudio, typeof(AddAudioPage));
 
-            // Loaded += async (_, __) => await InitializeAsync();
             Loaded += OnLoaded;
 
         }
@@ -41,12 +40,12 @@ namespace NoorSound
                 if (_authService.CurrentUser() == null)
                 {
                     FlyoutBehavior = FlyoutBehavior.Disabled;
-                    await GoToAsync("//Login");
+                    await GoToAsync(AppRoutes.Login); 
                 }
                 else
                 {
                     FlyoutBehavior = FlyoutBehavior.Flyout;
-                    await GoToAsync("//Home");
+                    await GoToAsync(AppRoutes.Home);
                 }
             }
             catch (Exception ex)

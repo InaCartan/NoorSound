@@ -43,8 +43,32 @@ namespace NoorSound.Services
 
         public async Task DeleteAudio(int id)
         {
+            // Save the Image url and Audio url from Supabase Storage
+            var audio = await _supabaseClient.From<Audio>().Where(a => a.Id == id).Single();
+
+            if(audio == null)
+            {
+                return;
+            }
+
+            // Delete the Image url and Audio url from Supabase Storage
+            if (!string.IsNullOrWhiteSpace(audio.ImageUrl))
+            {
+                await _supabaseClient.Storage.From("images").Remove(new List<string>() { audio.ImageUrl });
+            }
+
+            if (!string.IsNullOrWhiteSpace(audio.AudioUrl))
+            {
+                await _supabaseClient.Storage.From("audio-files").Remove(new List<string>() { audio.AudioUrl});
+            }
+
+
+            // In Shaa Allah ta'ala, now deleting the audio row from the database
+            // (after having deleting the image and audio files) 
             await _supabaseClient.From<Audio>().Where(a => a.Id == id).Delete();
         }
+
+
 
         public async Task<string> UploadFile(Stream fileStream, string fileName, string bucket)
         {
