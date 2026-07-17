@@ -1,5 +1,5 @@
 ﻿using NoorSound.Services;
-using Supabase;
+using System.Diagnostics;
 
 namespace NoorSound
 {
@@ -7,25 +7,57 @@ namespace NoorSound
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IStartupService _startupService;
+        private readonly IDialogService _dialogService;
+        private readonly AppShell _appShell;
 
-        public App(IServiceProvider serviceProvider, IStartupService startupService)
+        private Task? _initializationTask;
+
+        public App(IServiceProvider serviceProvider, IStartupService startupService, AppShell appShell, IDialogService dialogService)
         {
             InitializeComponent();
             _serviceProvider = serviceProvider;
             _startupService = startupService;
+            _appShell = appShell;
+            _dialogService = dialogService;
 
 
         }
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            _startupService.InitializeAsync().GetAwaiter().GetResult();
+            var window = new Window(_appShell);
 
-            var shell = _serviceProvider.GetRequiredService<AppShell>();
+            window.Created += OnWindowCreated;
 
-            return new Window(shell);
+            return window;
 
         }
 
+        private async void OnWindowCreated(
+            object? sender,
+            EventArgs e)
+        {
+            try
+            {
+                // Prevent initialization from running more than once.
+                _initializationTask ??=
+                    _startupService.InitializeAsync();
+
+                await _initializationTask;
+            }
+            catch (Exception exception)
+            {
+                Debug.WriteLine(exception);
+                
+
+                // Permit another attempt if initialization is started again.
+                _initializationTask = null;
+
+                await _dialogService.ShowAlert(
+                    "Startup error",
+                    "The application could not be initialized.");
+            }
+        }
     }
 }
+

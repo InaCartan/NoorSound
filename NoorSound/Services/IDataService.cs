@@ -7,9 +7,10 @@ namespace NoorSound.Services
         Task AddAudio(AudioInsert audio);
         Task <IEnumerable<Audio>> GetAudios();
         Task UpdateAudio(Audio audio);
-        Task DeleteAudio(int id);
+        Task DeleteAudio(long id);
 
-        Task<string> UploadFile(Stream fileStream, string fileName, string bucket);
+        Task DeleteFileFromStorage(string bucket, string path);
+        Task<(string Path, string PublicUrl)> UploadFile(Stream fileStream, string fileName, string bucket);
 
     }
 }

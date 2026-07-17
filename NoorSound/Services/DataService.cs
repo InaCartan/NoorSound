@@ -37,11 +37,13 @@ namespace NoorSound.Services
             await _supabaseClient.From<Audio>().Where(a => a.Id == audio.Id) 
                 .Set(a => a.AudioName, audio.AudioName)
                 .Set(a => a.ImageUrl, audio.ImageUrl)
+                .Set(a => a.ImagePath, audio.ImagePath)
                 .Set(a => a.AudioUrl, audio.AudioUrl)
+                .Set(a => a.AudioPath, audio.AudioPath)
                 .Update();
         }
 
-        public async Task DeleteAudio(int id)
+        public async Task DeleteAudio(long id)
         {
             // Save the Image url and Audio url from Supabase Storage
             var audio = await _supabaseClient.From<Audio>().Where(a => a.Id == id).Single();
@@ -51,26 +53,43 @@ namespace NoorSound.Services
                 return;
             }
 
-            // Delete the Image url and Audio url from Supabase Storage
-            if (!string.IsNullOrWhiteSpace(audio.ImageUrl))
+            // In Shaa Allah ta'ala, first deleting the Image url and Audio url from Supabase Storage
+            if (!string.IsNullOrWhiteSpace(audio.ImagePath))
             {
-                await _supabaseClient.Storage.From("images").Remove(new List<string>() { audio.ImageUrl });
+                await _supabaseClient.Storage.From("images").Remove(new List<string>() { audio.ImagePath });
             }
 
-            if (!string.IsNullOrWhiteSpace(audio.AudioUrl))
+            if (!string.IsNullOrWhiteSpace(audio.AudioPath))
             {
-                await _supabaseClient.Storage.From("audio-files").Remove(new List<string>() { audio.AudioUrl});
+                await _supabaseClient.Storage.From("audio-files").Remove(new List<string>() { audio.AudioPath});
             }
 
 
-            // In Shaa Allah ta'ala, now deleting the audio row from the database
-            // (after having deleting the image and audio files) 
+            // then deleting the audio row from the database
             await _supabaseClient.From<Audio>().Where(a => a.Id == id).Delete();
         }
 
 
 
-        public async Task<string> UploadFile(Stream fileStream, string fileName, string bucket)
+        
+        public async Task DeleteFileFromStorage(string bucket, string path)
+        {
+
+            if (string.IsNullOrWhiteSpace(bucket))
+            {
+                throw new ArgumentException("Storage bucket is required");
+            }
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return;
+            }
+
+            await _supabaseClient.Storage.From(bucket).Remove(new List<string>() { path });
+        }
+
+        // TODO: Change function, so it have Resumable and Streamed uploading (using the TUS protocol)
+        public async Task<(string Path, string PublicUrl)> UploadFile(Stream fileStream, string fileName, string bucket)
         {
             var path = $"{Guid.NewGuid()}_{fileName}";
 
@@ -78,15 +97,15 @@ namespace NoorSound.Services
             // In Shaa Allah, hover over the code to see explanations
             using var memoryStram = new MemoryStream();
             await fileStream.CopyToAsync(memoryStram);
-            var bytes = memoryStram.ToArray();
+            
 
             // In Shaa Allah, this will uploade the file to Supabase
-            await _supabaseClient.Storage.From(bucket).Upload(bytes, path);
+            await _supabaseClient.Storage.From(bucket).Upload(memoryStram.ToArray(), path);
 
             // In Shaa Allah, getting the public URL of the uploaded file
             var publicUrl = _supabaseClient.Storage.From(bucket).GetPublicUrl(path);
 
-            return publicUrl;
+            return (path, publicUrl);
         }
 
     }

@@ -11,24 +11,31 @@ namespace NoorSound.Models
     {
         
         [PrimaryKey("id", false)]
-        public int Id { get; set; } 
+        public long Id { get; set; } 
         
-
         [Column("audio_name")]
         public string AudioName { get; set; } = string.Empty;
+
 
 
         [Column("image_url")]
         public string ImageUrl { get; set; } = string.Empty;
 
+        [Column("image_path")]
+        public string ImagePath { get; set; } = string.Empty;
 
+
+        
         [Column("audio_url")]
         public string AudioUrl { get; set; } = string.Empty;
+
+        [Column("audio_path")]
+        public string AudioPath { get; set; } = string.Empty;
+
 
 
         [Column("admin_id")]
         public string AdminId { get; set; } = string.Empty;
-
 
         [Reference(typeof(Admin), includeInQuery: true)] // Foreign key to Admin
         public Admin? Admin { get; set; } 

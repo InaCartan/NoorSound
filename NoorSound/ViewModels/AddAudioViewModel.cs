@@ -14,21 +14,26 @@ namespace NoorSound.ViewModels
 
 
         [ObservableProperty]
-        public required partial string NewAudioName { get; set; }
+        public partial string NewAudioName { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public required partial string NewImageUrl { get; set; }
+        public partial string NewImageUrl { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public required partial string NewAudioUrl { get; set; }
+        public partial string NewImagePath { get; set; } = string.Empty;
 
         [ObservableProperty]
-        public required partial bool IsBusy { get; set; }
+        public partial string NewAudioUrl { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial string NewAudioPath { get; set; } = string.Empty;
+
+        [ObservableProperty]
+        public partial bool IsBusy { get; set; }
 
         public AddAudioViewModel(
             IDataService dataService, 
             IAuthService authService, 
-            LibraryViewModel libraryViewModel,
             IDialogService dialogService,
             INavigationService navigationService)
         {
@@ -71,14 +76,20 @@ namespace NoorSound.ViewModels
                     // that can be uploaded to Supabase using the UploadFile method
                     using var stream = await result.OpenReadAsync(); 
 
-                    NewAudioUrl = await _dataService.UploadFile(stream, result.FileName, "audio-files"); 
+                    var uploadedAudio = await _dataService.UploadFile(stream, result.FileName, "audio-files");
+
+                    NewAudioPath = uploadedAudio.Path;
+                    NewAudioUrl = uploadedAudio.PublicUrl;
+
                 }
             }
             catch
             {
+                
+
                 await _dialogService.ShowAlert(
                     "Whoops...", 
-                    "Unable to load the audio. Did you choose a valid file (must be MP3, WAV, M4A or AAC)"
+                    "Unable to load the audio. Did you choose a valid file? (must be MP3, WAV, M4A or AAC)"
                     );
             }
             finally 
@@ -105,7 +116,9 @@ namespace NoorSound.ViewModels
 
                     using var stream = await result.OpenReadAsync();
 
-                    NewImageUrl = await _dataService.UploadFile(stream, result.FileName, "images");
+                    var uploadedImage = await _dataService.UploadFile(stream, result.FileName, "images");
+                    NewImagePath = uploadedImage.Path;
+                    NewImageUrl = uploadedImage.PublicUrl;
                 }
             }    
             catch
@@ -153,21 +166,44 @@ namespace NoorSound.ViewModels
                 AudioInsert audio = new AudioInsert()
                 {
                     AudioName = NewAudioName,
+
                     ImageUrl = NewImageUrl,
+                    ImagePath = NewImagePath,
+
                     AudioUrl = NewAudioUrl,
+                    AudioPath = NewAudioPath,
+
                     AdminId = userId
                 };
 
                 await _dataService.AddAudio(audio);
 
-                // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
-                // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 
-                await _navigationService.GoBackAsync();
-
             }
             catch
             {
+                if (!string.IsNullOrWhiteSpace(NewAudioPath))
+                {
+                    await _dataService.DeleteFileFromStorage("audio-files", NewAudioPath);
+                }
+
+                if (!string.IsNullOrWhiteSpace(NewImagePath))
+                {
+                    await _dataService.DeleteFileFromStorage("images", NewImagePath);
+                }
+
                 await _dialogService.ShowAlert("Hmm...", "Something didn't work, try again");
+                return;
+            }
+
+            try
+            {
+                // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
+                // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 
+                await _navigationService.GoBackAsync();
+            }
+            catch
+            {
+                await _dialogService.ShowAlert("An error occured, but audio is saved...", "Go back to see it in library");
             }
 
 
