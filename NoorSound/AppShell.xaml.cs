@@ -7,7 +7,7 @@ namespace NoorSound
     {
 
         private readonly IAuthService _authService;
-        private bool _initialized;
+        
 
         public AppShell(IAuthService authService)
         {
@@ -17,47 +17,26 @@ namespace NoorSound
 
             Routing.RegisterRoute(AppRoutes.AddAudio, typeof(AddAudioPage));
 
-            Loaded += OnLoaded;
+            
 
         }
-
-        private async void OnLoaded(object? sender, EventArgs e)
-        {
-            if (_initialized)
-                return;
-
-            _initialized = true;
-
-            await InitializeAsync();
-        }
-
-        private async Task InitializeAsync()
-        {
-
-            try
-            {
-                
-                if (_authService.CurrentUser() == null)
-                {
-                    FlyoutBehavior = FlyoutBehavior.Disabled;
-                    await GoToAsync(AppRoutes.Login); 
-                }
-                else
-                {
-                    FlyoutBehavior = FlyoutBehavior.Flyout;
-                    await GoToAsync(AppRoutes.Home);
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex);
-            }
-        }
-
 
         
 
-
-
+        public async Task InitializeAsync()
+        {
+    
+            if (_authService.CurrentUser() == null)
+            {
+                FlyoutBehavior = FlyoutBehavior.Disabled;
+                await GoToAsync(AppRoutes.Login); 
+            }
+            else
+            {
+                FlyoutBehavior = FlyoutBehavior.Flyout;
+                await GoToAsync(AppRoutes.Home);
+            }
+            
+        }
     }
 }

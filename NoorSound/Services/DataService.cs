@@ -53,7 +53,11 @@ namespace NoorSound.Services
                 return;
             }
 
-            // In Shaa Allah ta'ala, first deleting the Image url and Audio url from Supabase Storage
+            // In Shaa Allah ta'ala, first deleting the audio row from the database
+            await _supabaseClient.From<Audio>().Where(a => a.Id == id).Delete();
+
+
+            // then deleting the Image url and Audio url from Supabase Storage
             if (!string.IsNullOrWhiteSpace(audio.ImagePath))
             {
                 await _supabaseClient.Storage.From("images").Remove(new List<string>() { audio.ImagePath });
@@ -63,10 +67,6 @@ namespace NoorSound.Services
             {
                 await _supabaseClient.Storage.From("audio-files").Remove(new List<string>() { audio.AudioPath});
             }
-
-
-            // then deleting the audio row from the database
-            await _supabaseClient.From<Audio>().Where(a => a.Id == id).Delete();
         }
 
 

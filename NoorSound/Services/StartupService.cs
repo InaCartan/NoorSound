@@ -1,11 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Supabase;
 
 namespace NoorSound.Services
 {
-    public interface IStartupService
+    public class StartupService : IStartupService
     {
-        Task InitializeAsync();
+        private readonly Client _client;
+
+        public StartupService(Client client)
+        {
+            _client = client;
+        }
+
+        public async Task InitializeAsync()
+        {
+            await _client.InitializeAsync();
+        }
     }
 }
