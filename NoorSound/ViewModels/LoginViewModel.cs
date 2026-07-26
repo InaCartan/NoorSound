@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Services;
+using NoorSound.Services.Interfaces;
 
 
 namespace NoorSound.ViewModels
@@ -53,14 +54,16 @@ namespace NoorSound.ViewModels
             try
             {
                 await _authService.LogIn(Email, Password);
-                await _navigationService.GoToAsync("//HomePage");
-                
+                //await _navigationService.GoToAsync("//HomePage");
+                await _navigationService.GoToAsync(AppRoutes.Home);
+
             }
             catch
             {
-                // TODO: show specific error (network error, wrong login and so on...)
                 PasswordError = "Invalid email or password, try again";
-                
+
+                // TODO: show not only PasswordError -> show specific error (network error, wrong login and so on...)
+
             }
         }
 
@@ -78,33 +81,39 @@ namespace NoorSound.ViewModels
             {
                 await _authService.SignUp(Email, Password, AdminName);
 
-                await _navigationService.GoToAsync("//HomePage");
-                
+                //await _navigationService.GoToAsync("//HomePage");
+                await _navigationService.GoToAsync(AppRoutes.Home);
+
             }
             catch
             {
-                // TODO: show specific error (network error, wrong login and so on...)
                 EmailError = "Whoops! Something went wrong, try again";
-                
+
+                // TODO: show not only EmailError-> show specific error (network error, wrong login and so on...)
+
             }
         }
 
 
         //-- REDIRECTS --
+        
+        // (the two funcs are used in LoginPage.xaml & SignUpPage.xaml)
 
         [RelayCommand]
         private async Task SignUpRedirect()
         {
-            await _navigationService.GoToAsync("//SignUpPage");
-            // NavigateTo<SignUpPage>();
+            //await _navigationService.GoToAsync("//SignUpPage");
+            await _navigationService.GoToAsync(AppRoutes.SignUp);
+
 
         }
 
         [RelayCommand]
         private async Task LogInRedirect()
         {
-            await _navigationService.GoToAsync("//LoginPage");
-            // NavigateTo<LoginPage>();
+            //await _navigationService.GoToAsync("//LoginPage");
+            await _navigationService.GoToAsync(AppRoutes.Login);
+
         }
 
 

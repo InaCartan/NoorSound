@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using NoorSound.Services;
 using NoorSound.Models;
+using NoorSound.Services.Interfaces;
 
 namespace NoorSound.ViewModels
 {
@@ -181,6 +181,8 @@ namespace NoorSound.ViewModels
             }
             catch
             {
+                // Image and Audio files may be uploaded to Supabase storage, while the nothing has been added to audio table in database.
+                // In Shaa Allah ta'ala, thus these two files need to be deleted from Supabase storage.
                 if (!string.IsNullOrWhiteSpace(NewAudioPath))
                 {
                     await _dataService.DeleteFileFromStorage("audio-files", NewAudioPath);
@@ -191,13 +193,13 @@ namespace NoorSound.ViewModels
                     await _dataService.DeleteFileFromStorage("images", NewImagePath);
                 }
 
-                await _dialogService.ShowAlert("Hmm...", "Something didn't work, try again");
+                await _dialogService.ShowAlert("Error", "Something didn't work, try again");
                 return;
             }
 
             try
             {
-                // ** (the following comment is "almost" generated in VS 2022 - maybe it's right - ) **
+                // ** (the following comment is "almost" auto generated) **
                 // Navigate back to the previous page (LibraryViewModel) just like pressing the back button 
                 await _navigationService.GoBackAsync();
             }

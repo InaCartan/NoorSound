@@ -8,6 +8,7 @@ using NoorSound.ViewModels;
 using NoorSound.Views;
 using NoorSound.Confiq;
 using Supabase;
+using NoorSound.Services.Interfaces;
 namespace NoorSound
 {
     public static class MauiProgram

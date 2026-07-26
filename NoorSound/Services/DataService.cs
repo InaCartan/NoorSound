@@ -1,6 +1,7 @@
 ﻿// ** BismiIllah Ar-Rahmaan Ar-Raheem ** \\
 
 using NoorSound.Models;
+using NoorSound.Services.Interfaces;
 using Supabase;
 
 

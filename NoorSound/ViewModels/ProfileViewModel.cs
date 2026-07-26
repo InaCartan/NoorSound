@@ -1,7 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
-using NoorSound.Services;
+using NoorSound.Services.Interfaces;
 using System.Collections.ObjectModel;
 
 

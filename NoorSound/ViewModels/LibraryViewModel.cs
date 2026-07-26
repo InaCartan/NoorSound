@@ -3,6 +3,7 @@ using CommunityToolkit.Mvvm.Input;
 using NoorSound.Services;
 using NoorSound.Models;
 using System.Collections.ObjectModel;
+using NoorSound.Services.Interfaces;
 
 
 namespace NoorSound.ViewModels
@@ -57,14 +58,14 @@ namespace NoorSound.ViewModels
 
             catch
             {
-                await _dialogService.ShowAlert("Hmmm...Error", "Unable to load audios, try to refresh page");
+                await _dialogService.ShowAlert("Error", "Unable to load audios, try to refresh page");
             }
         }
 
 
 
 
-        // In Shaa Allah, this func navigates to AddAudioPage.xaml.cs (not the viewmodel)
+        // In Shaa Allah, this func navigates to AddAudioPage
         [RelayCommand]
         private async Task AddAudio()
         {
@@ -86,11 +87,11 @@ namespace NoorSound.ViewModels
                 try
                 {
                     await _dataService.DeleteAudio(audio.Id);
-                    await LoadAudios(); // In Shaa Allah, method refresh the list after a deletion
+                    await LoadAudios(); // In Shaa Allah, this function refresh the list after a deletion
                 }
                 catch 
                 {
-                    await _dialogService.ShowAlert("Hmmm...Error", "Unable to delete audio, try one more time.");
+                    await _dialogService.ShowAlert("Error", "Unable to delete audio. Try one more time.");
                 }
             }
 

@@ -1,6 +1,6 @@
 ﻿using NoorSound.Models;
 
-namespace NoorSound.Services
+namespace NoorSound.Services.Interfaces
 {
     public interface IDataService
     {   

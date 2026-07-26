@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace NoorSound.Services
+namespace NoorSound.Services.Interfaces
 {
     public interface INavigationService
     {

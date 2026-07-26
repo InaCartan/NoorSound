@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
-using NoorSound.Services;
+using NoorSound.Services.Interfaces;
 using System.Collections.ObjectModel;
 namespace NoorSound.ViewModels
 {
@@ -37,7 +37,7 @@ namespace NoorSound.ViewModels
             }
             catch
             {
-                await _dialogService.ShowAlert("Hmmm...Error", "Unable to load audios, try to refresh page");
+                await _dialogService.ShowAlert("Error", "Unable to load audios, try to refresh page");
             }
         }
 

@@ -1,21 +1,19 @@
-﻿using NoorSound.Services;
+﻿using NoorSound.Services.Interfaces;
 using System.Diagnostics;
 
 namespace NoorSound
 {
     public partial class App : Application
     {
-        //private readonly IServiceProvider _serviceProvider;
         private readonly IStartupService _startupService;
         private readonly IDialogService _dialogService;
         private readonly AppShell _appShell;
 
         private Task? _initializationTask;
 
-        public App(/*IServiceProvider serviceProvider,*/ IStartupService startupService, AppShell appShell, IDialogService dialogService)
+        public App(IStartupService startupService, AppShell appShell, IDialogService dialogService)
         {
             InitializeComponent();
-          //  _serviceProvider = serviceProvider;
             _startupService = startupService;
             _appShell = appShell;
             _dialogService = dialogService;
@@ -40,7 +38,6 @@ namespace NoorSound
             try
             {
                 // Prevent initialization from running more than once.
-                //_initializationTask ??= _startupService.InitializeAsync();
                 _initializationTask ??= InitializeApplicationAsync();
 
                 await _initializationTask;

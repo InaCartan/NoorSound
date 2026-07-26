@@ -1,7 +1,7 @@
 ﻿using NoorSound.Models;
 using Supabase;
 
-namespace NoorSound.Services
+namespace NoorSound.Services.Interfaces
 {
     public interface IAuthService
     {

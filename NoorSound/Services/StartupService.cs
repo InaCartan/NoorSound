@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using NoorSound.Services.Interfaces;
 using Supabase;
 
 namespace NoorSound.Services
