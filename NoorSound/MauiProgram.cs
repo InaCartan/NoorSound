@@ -2,12 +2,10 @@
 
 using Microsoft.Extensions.Logging;
 using CommunityToolkit.Maui;
-using NoorSound.Models;
 using NoorSound.Services;
 using NoorSound.ViewModels;
 using NoorSound.Views;
 using NoorSound.Confiq;
-using Supabase;
 using NoorSound.Services.Interfaces;
 namespace NoorSound
 {
@@ -16,11 +14,15 @@ namespace NoorSound
         public static MauiApp CreateMauiApp()
         {
             var builder = MauiApp.CreateBuilder();
-            builder.UseMauiApp<App>().ConfigureFonts(fonts =>
-            {
-                fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
-                fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-            }).UseMauiCommunityToolkit();
+            builder
+                .UseMauiApp<App>()
+                .UseMauiCommunityToolkitMediaElement(isAndroidForegroundServiceEnabled: true)
+                .UseMauiCommunityToolkit()
+                .ConfigureFonts(fonts =>
+                {
+                    fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
+                    fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                });
 
             // In Shaa Allah these are the following steps that the program will start with:
 

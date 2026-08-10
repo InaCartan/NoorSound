@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NoorSound.Views.HomePage"
-             xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
-             x:DataType="viewmodel:HomeViewModel"
+             
              xmlns:model="clr-namespace:NoorSound.Models"
+             xmlns:viewmodel="clr-namespace:NoorSound.ViewModels" 
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             
+             x:Class="NoorSound.Views.HomePage"
+             x:DataType="viewmodel:HomeViewModel"
+            
              Title="Home">
     
     <CollectionView ItemsSource="{Binding Audios}">
@@ -19,6 +23,12 @@
                     <Label Text="{Binding AudioName}" FontAttributes="Bold" />
 
                     <Label Text="{Binding Admin.Name}" FontSize="12" />
+                    
+                    <toolkit:MediaElement 
+                        WidthRequest="400" 
+                        HeightRequest="200" 
+                        Source="{Binding AudioUrl}"
+                        ShouldShowPlaybackControls="True"/>
 
                 </VerticalStackLayout>
 
