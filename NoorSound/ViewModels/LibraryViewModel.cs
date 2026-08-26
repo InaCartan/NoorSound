@@ -63,13 +63,13 @@ namespace NoorSound.ViewModels
         }
 
 
-
-
-        // In Shaa Allah, this func navigates to AddAudioPage
+        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
         [RelayCommand]
-        private async Task AddAudio()
+        private async Task NavToAudioPage(Audio audio)
         {
-            await _navigationService.GoToAsync(AppRoutes.AddAudio);
+            await _navigationService.GoToAsyncWithObject(
+                AppRoutes.AudioPlayer, 
+                new Dictionary<string, object> { { "Audio", audio} });
         }
 
 

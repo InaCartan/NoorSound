@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
+using NoorSound.Services;
 using NoorSound.Services.Interfaces;
 using System.Collections.ObjectModel;
 namespace NoorSound.ViewModels
@@ -10,15 +11,18 @@ namespace NoorSound.ViewModels
     {
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
+        private readonly INavigationService _navigationService;
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
         public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
 
-        public HomeViewModel(IDataService dataService, IDialogService dialogService)
+        public HomeViewModel(IDataService dataService, IDialogService dialogService, INavigationService navigationService)
         {
             _dataService = dataService;
             _dialogService = dialogService;
+            _navigationService = navigationService;
+
         }
 
         [RelayCommand]
@@ -41,6 +45,14 @@ namespace NoorSound.ViewModels
             }
         }
 
+        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
+        [RelayCommand]
+        private async Task NavAudioPlayerPage(Audio audio)
+        {
+            await _navigationService.GoToAsyncWithObject(
+               AppRoutes.AudioPlayer,
+               new Dictionary<string, object> { { "Audio", audio } });
+        }
     }
 }
 

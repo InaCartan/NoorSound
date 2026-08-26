@@ -7,6 +7,7 @@ namespace NoorSound.Services
     {
         // This is registered separately in AppShell.xaml.cs (note -> .cs)
         public const string AddAudio = nameof(AddAudioPage);
+        public const string AudioPlayer = nameof(AudioPlayerPage);
 
         // These are defined directly inside AppShell.xaml in a ShellContent.
         public const string Login = "//" + nameof(LoginPage);

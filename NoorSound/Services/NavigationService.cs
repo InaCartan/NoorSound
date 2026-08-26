@@ -7,6 +7,15 @@ namespace NoorSound.Services
 {
     public class NavigationService : INavigationService
     {
+
+        public async Task GoToAsyncWithObject(string route, IDictionary<string, object> parameters)
+        {
+            if (Shell.Current == null)
+                return;
+
+            await Shell.Current.GoToAsync(route, parameters);
+        }
+
         public async Task GoToAsync(string route)
         {
             if (Shell.Current == null)

@@ -17,7 +17,7 @@
 			<Button
             Grid.Column="1"
             Background="DarkOrange"
-            Command="{Binding AddAudioCommand}"
+            Command="{Binding NavToAudioPageCommand}"
             HorizontalOptions="End"
             Text="Add"
             TextColor="#eff5f3" />
