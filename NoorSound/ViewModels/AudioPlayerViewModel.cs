@@ -9,13 +9,13 @@ using System.Text;
 
 namespace NoorSound.ViewModels
 {
-    public partial class AudioPlayerViewModel : ObservableObject
+    public partial class AudioPlayerViewModel : ObservableObject, IQueryAttributable 
     {
         private readonly IDataService _dataService;
         private readonly IDialogService _dialogService;
 
         [ObservableProperty]
-        public Audio? currentAudio;
+        private Audio? currentAudio;
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
@@ -32,10 +32,10 @@ namespace NoorSound.ViewModels
 
         public async void ApplyQueryAttributes(IDictionary<string, object> query)
         {
-            if (query.TryGetValue("AudioId", out var value) &&
-                value is long audioId)
+            if (query.TryGetValue("Audio", out var value) &&
+                value is Audio audio)
             {
-                await LoadAudio(audioId);
+                CurrentAudio = audio;
             }
         }
 

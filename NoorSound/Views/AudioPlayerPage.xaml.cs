@@ -4,9 +4,13 @@ namespace NoorSound.Views;
 
 public partial class AudioPlayerPage : ContentPage
 {
-	public AudioPlayerPage(AudioPlayerViewModel vm)
+    private readonly AudioPlayerViewModel _vm;
+    public AudioPlayerPage(AudioPlayerViewModel vm)
 	{
 		InitializeComponent();
         BindingContext = vm;
+        _vm = vm;
     }
+
+   
 }
