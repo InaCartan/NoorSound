@@ -13,7 +13,8 @@ namespace NoorSound.Services
         public const string Login = "//" + nameof(LoginPage);
         public const string Home = "//" + nameof(HomePage);
         public const string Library = "//" + nameof(LibraryPage);
-        public const string Profile = "//" + nameof(ProfilePage);
+        // public const string Profile = "//" + nameof(ProfilePage);
+        public const string Profile = nameof(ProfilePage);
         public const string SignUp = "//" + nameof(SignUpPage);
     }
 }

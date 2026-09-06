@@ -53,6 +53,13 @@ namespace NoorSound.ViewModels
                AppRoutes.AudioPlayer,
                new Dictionary<string, object> { { "Audio", audio } });
         }
+
+        // In Shaa Allah ta'ala, this func navigates to ProfilePage
+        [RelayCommand]
+        private async Task NavProfilePage()
+        {
+            await _navigationService.GoToAsync(AppRoutes.Profile);
+        }
     }
 }
 

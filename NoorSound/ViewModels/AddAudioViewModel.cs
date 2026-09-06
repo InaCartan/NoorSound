@@ -145,6 +145,7 @@ namespace NoorSound.ViewModels
         {
             var userId = _authService.CurrentUserId();
 
+
             if (string.IsNullOrWhiteSpace(userId))
             {
                 await _dialogService.ShowAlert(

@@ -2,30 +2,21 @@
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
 using NoorSound.Services.Interfaces;
-using System.Collections.ObjectModel;
 
 
 namespace NoorSound.ViewModels
 {
     public partial class ProfileViewModel : ObservableObject
     {
-        private readonly IDataService _dataService;
         private readonly IAuthService _authService;
-
-        [ObservableProperty]
-        public partial string Email { get; set; } = string.Empty;
+        private readonly IDialogService _dialogService;
 
         [ObservableProperty]
         public partial string AdminName { get; set; } = string.Empty;
 
-        [ObservableProperty]
-        public partial string ErrorMessage { get; set; } = string.Empty;
-
-
-
-        public ProfileViewModel(IDataService dataService, IAuthService authService) {
+        public ProfileViewModel(IDialogService dialogService, IAuthService authService) {
             _authService = authService;
-            _dataService = dataService;
+            _dialogService = dialogService;
         }
 
 
@@ -36,6 +27,25 @@ namespace NoorSound.ViewModels
             // Load the current user and save their info (Email, AdminName and so on)
             // If there is no info about the user, navigate to a
             // new ProfilePage that ask the user to registere to get more benifits (for example saving audios and so on)
+            
+            var user = _authService.CurrentUser();
+            if(user != null)
+            {
+                user = _authService.CurrentUser();
+                AdminName = user.UserMetadata["admin_name"]?.ToString();
+            }
+            else
+            {
+                await _dialogService.ShowAlert(
+                   "Whoops...",
+                   "You need to have an account to upload audios. It's free to sign up!"
+                   );
+
+                return;
+            }
+            
+
+
 
         }
        

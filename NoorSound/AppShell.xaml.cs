@@ -18,13 +18,14 @@ namespace NoorSound
 
             Routing.RegisterRoute(AppRoutes.AddAudio, typeof(AddAudioPage));
             Routing.RegisterRoute(AppRoutes.AudioPlayer, typeof(AudioPlayerPage));
+            Routing.RegisterRoute(AppRoutes.Profile, typeof(ProfilePage));
         }
 
         
 
         public async Task InitializeAsync()
         {
-    
+            
             if (_authService.CurrentUser() == null)
             {
                 FlyoutBehavior = FlyoutBehavior.Disabled;

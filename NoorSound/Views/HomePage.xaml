@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              
              x:Class="NoorSound.Views.HomePage"
+             x:Name="homePage"
              Title="Home"
              
              xmlns:model="clr-namespace:NoorSound.Models"
@@ -12,28 +13,33 @@
 
     <CollectionView ItemsSource="{Binding Audios}">
 
-        <CollectionView.ItemTemplate>
+        <CollectionView.Header>
+            <Label Text="Profile" FontAttributes="Bold">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer
+                    Command="{Binding Source={x:Reference homePage}, Path=BindingContext.NavProfilePageCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+        </CollectionView.Header> 
+            
+            <CollectionView.ItemTemplate>
             <DataTemplate x:DataType="model:Audio">
 
                 <VerticalStackLayout Padding="10">
-
                     <Image Source="{Binding ImageUrl}" HeightRequest="200">
-                        
+
                         <Image.GestureRecognizers>
                             <TapGestureRecognizer
                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=NavAudioPlayerPageCommand}"
                             CommandParameter="{Binding .}" />
                         </Image.GestureRecognizers>
-                        
+
                     </Image>
-                           
+
                     <Label Text="{Binding AudioName}" FontAttributes="Bold" />
 
                     <Label Text="{Binding Admin.Name}" FontSize="12" />
-                    
-
                 </VerticalStackLayout>
-
             </DataTemplate>
         </CollectionView.ItemTemplate>
 

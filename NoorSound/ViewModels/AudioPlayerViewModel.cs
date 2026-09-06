@@ -15,7 +15,7 @@ namespace NoorSound.ViewModels
         private readonly IDialogService _dialogService;
 
         [ObservableProperty]
-        private Audio? currentAudio;
+        public partial Audio? CurrentAudio { get; set; } = null;
 
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
@@ -39,20 +39,21 @@ namespace NoorSound.ViewModels
             }
         }
 
-        private async Task LoadAudio(long audioId)
-        {
-            try
-            {
-                var audios = await _dataService.GetAudios();
+        // ** Maybe it won't be used, so delete if not used **
+        //private async Task LoadAudio(long audioId)
+        //{
+        //    try
+        //    {
+        //        var audios = await _dataService.GetAudios();
 
-                CurrentAudio = audios.FirstOrDefault(a => a.Id == audioId);
-            }
-            catch
-            {
-                await _dialogService.ShowAlert(
-                    "Error",
-                    "Unable to load audio");
-            }
-        }
+        //        CurrentAudio = audios.FirstOrDefault(a => a.Id == audioId);
+        //    }
+        //    catch
+        //    {
+        //        await _dialogService.ShowAlert(
+        //            "Error",
+        //            "Unable to load audio");
+        //    }
+        //}
     }
 }
