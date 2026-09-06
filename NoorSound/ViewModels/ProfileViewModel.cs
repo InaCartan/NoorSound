@@ -10,18 +10,24 @@ namespace NoorSound.ViewModels
     {
         private readonly IAuthService _authService;
         private readonly IDialogService _dialogService;
+        private readonly IDataService _dataService;
 
         [ObservableProperty]
         public partial string AdminName { get; set; } = string.Empty;
 
-        public ProfileViewModel(IDialogService dialogService, IAuthService authService) {
+        public ProfileViewModel(
+            IDialogService dialogService,
+            IAuthService authService,
+            IDataService dataService)
+        {
             _authService = authService;
             _dialogService = dialogService;
+            _dataService = dataService;
         }
 
 
         [RelayCommand]
-        private async Task LoadProfile()
+        public async Task LoadProfile()
         {
             // BismiIllah
             // Load the current user and save their info (Email, AdminName and so on)
@@ -29,10 +35,16 @@ namespace NoorSound.ViewModels
             // new ProfilePage that ask the user to registere to get more benifits (for example saving audios and so on)
             
             var user = _authService.CurrentUser();
-            if(user != null)
+            if (user != null)
             {
-                user = _authService.CurrentUser();
-                AdminName = user.UserMetadata["admin_name"]?.ToString();
+                if (string.IsNullOrWhiteSpace(user.Id))
+                {
+                    AdminName = string.Empty;
+                    return;
+                }
+
+                var admin = await _dataService.GetAdmin(user.Id);
+                AdminName = admin?.Name ?? string.Empty;
             }
             else
             {

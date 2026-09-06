@@ -6,6 +6,7 @@ namespace NoorSound.Services.Interfaces
     {   
         Task AddAudio(AudioInsert audio);
         Task <IEnumerable<Audio>> GetAudios();
+        Task<Admin?> GetAdmin(string id);
         Task UpdateAudio(Audio audio);
         Task DeleteAudio(long id);
 

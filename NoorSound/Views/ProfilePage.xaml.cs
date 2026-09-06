@@ -13,4 +13,10 @@ public partial class ProfilePage : ContentPage
 		BindingContext = vm;
 		_vm = vm; 
 	}
+
+	protected override async void OnAppearing()
+	{
+		base.OnAppearing();
+		await _vm.LoadProfile();
+	}
 }

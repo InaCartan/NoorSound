@@ -23,8 +23,9 @@
         -->
 
         <Label
-        Text="{Binding AdminName}"
+            Text="{Binding AdminName}"
         FontSize="24"
+        VerticalOptions="Center"
         HorizontalOptions="Center" />
         
     </VerticalStackLayout>

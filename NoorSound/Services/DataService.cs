@@ -32,6 +32,13 @@ namespace NoorSound.Services
             return response.Models.OrderByDescending(a => a.MadeAt);
         }
 
+        public async Task<Admin?> GetAdmin(string id)
+        {
+            return await _supabaseClient.From<Admin>()
+                .Where(admin => admin.Id == id)
+                .Single();
+        }
+
 
         public async Task UpdateAudio(Audio audio)
         {
