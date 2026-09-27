@@ -5,6 +5,7 @@ using NoorSound.Services.Interfaces;
 using Supabase;
 
 
+
 namespace NoorSound.Services
 {
 
@@ -18,8 +19,11 @@ namespace NoorSound.Services
         {
             _supabaseClient = supabaseClient;
         }
-        
-        
+
+
+
+        // ------- Audio ------- 
+
         public async Task AddAudio(AudioInsert audio)
         {
             await _supabaseClient.From<AudioInsert>().Insert(audio);
@@ -28,15 +32,10 @@ namespace NoorSound.Services
 
         public async Task<IEnumerable<Audio>> GetAudios()
         {
-            var response = await _supabaseClient.From<Audio>().Get(); // In Shaa Allah, get all audios from Audio table 
-            return response.Models.OrderByDescending(a => a.MadeAt);
-        }
+            // In Shaa Allah ta'ala, get all audios from Audio table 
+            var response = await _supabaseClient.From<Audio>().Get();
 
-        public async Task<Admin?> GetAdmin(string id)
-        {
-            return await _supabaseClient.From<Admin>()
-                .Where(admin => admin.Id == id)
-                .Single();
+            return response.Models.OrderByDescending(a => a.MadeAt);
         }
 
 
@@ -53,7 +52,7 @@ namespace NoorSound.Services
 
         public async Task DeleteAudio(long id)
         {
-            // Save the Image url and Audio url from Supabase Storage
+            // Saves the Image url and Audio url from Supabase Storage
             var audio = await _supabaseClient.From<Audio>().Where(a => a.Id == id).Single();
 
             if(audio == null)
@@ -78,8 +77,49 @@ namespace NoorSound.Services
         }
 
 
+        // ------- Playlist ------- 
+
+        public async Task AddPlaylist(PlaylistInsert playlist)
+        {
+            await _supabaseClient.From<PlaylistInsert>().Insert(playlist);
+        }
+
+        public async Task<IEnumerable<Playlist>> GetPlaylists()
+        {
+            var response = await _supabaseClient.From<Playlist>().Get();
+
+            return response.Models.OrderByDescending(plst => plst.MadeAt);
+        }
+
+
+        public async Task AddAudioToPlaylist(PlaylistAudioInsert playlistAudio)
+        {
+            await _supabaseClient.From<PlaylistAudioInsert>().Insert(playlistAudio);
+        }
 
         
+
+        public async Task<IEnumerable<PlaylistAudio>> GetPlaylistAudios()
+        {
+            var response = await _supabaseClient.From<PlaylistAudio>().Get();
+
+            return response.Models.OrderByDescending(plstAudio => plstAudio.MadeAt);
+        }
+
+
+
+        // ------- Admin ------- 
+        public async Task<Admin?> GetAdmin(string id)
+        {
+            return await _supabaseClient.From<Admin>()
+                .Where(admin => admin.Id == id)
+                .Single();
+        }
+
+
+
+        // ------- Storage ------- 
+
         public async Task DeleteFileFromStorage(string bucket, string path)
         {
 
@@ -116,5 +156,7 @@ namespace NoorSound.Services
             return (path, publicUrl);
         }
 
+
+        
     }
 }

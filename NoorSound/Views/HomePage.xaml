@@ -14,7 +14,7 @@
     <CollectionView ItemsSource="{Binding Audios}">
 
         <CollectionView.Header>
-            <Label Text="Profile" FontAttributes="Bold">
+            <Label Text="Profil" FontAttributes="Bold">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer
                     Command="{Binding Source={x:Reference homePage}, Path=BindingContext.NavProfilePageCommand}"/>

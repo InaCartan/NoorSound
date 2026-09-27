@@ -67,5 +67,10 @@ namespace NoorSound.Services
             return _supabaseClient.Auth.CurrentUser?.Id; 
         }
 
+        // ** TODO: Check if all those who use CurrentUser should be replaced with this method.
+        public async Task<string?> CurrentUserIdAsync()
+        {
+            return _supabaseClient.Auth.CurrentUser?.Id; 
+        }
     }
 }

@@ -33,6 +33,14 @@
             ContentTemplate="{DataTemplate views:LibraryPage}"
             Route="LibraryPage"/>
 
+        <!-- Search -->
+        <ShellContent
+            Title="Search"
+            ContentTemplate="{DataTemplate views:SearchPage}"
+            Route="SearchPage/"/>
+
+        
+
     </TabBar>
 
 </Shell>

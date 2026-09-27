@@ -10,5 +10,7 @@ namespace NoorSound.Services.Interfaces
         Task SignOut();
         Supabase.Gotrue.User? CurrentUser();
         string? CurrentUserId();
+
+        Task<string?> CurrentUserIdAsync();
     }
 }

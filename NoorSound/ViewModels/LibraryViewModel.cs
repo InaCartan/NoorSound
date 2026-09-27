@@ -51,8 +51,11 @@ namespace NoorSound.ViewModels
                 {
                     foreach (var audio in myAudios)
                     {
-                        Audios.Add(audio); 
+                        Audios.Add(audio);
                     }
+                }
+                else { 
+                    // Error message
                 }
             }
 
@@ -68,7 +71,7 @@ namespace NoorSound.ViewModels
         private async Task NavToAudioPage(Audio audio)
         {
             await _navigationService.GoToAsyncWithObject(
-                AppRoutes.AudioPlayer, 
+                AppRoutes.AddAudio, 
                 new Dictionary<string, object> { { "Audio", audio} });
         }
 

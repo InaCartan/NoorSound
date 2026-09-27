@@ -37,28 +37,35 @@ namespace NoorSound
 
 
             // adding ViewModels
+            builder.Services.AddTransient<AudioPlayerViewModel>();
+            builder.Services.AddTransient<AddAudioViewModel>();
+            builder.Services.AddTransient<AddPlaylistViewModel>();
             builder.Services.AddTransient<LoginViewModel>();
+            builder.Services.AddTransient<ProfileViewModel>();
+            
             builder.Services.AddSingleton<HomeViewModel>();
             builder.Services.AddSingleton<LibraryViewModel>();
-            builder.Services.AddTransient<ProfileViewModel>();
-            builder.Services.AddTransient<AddAudioViewModel>();
-            builder.Services.AddTransient<AudioPlayerViewModel>();
+            builder.Services.AddSingleton<SearchViewModel>();
 
             // adding Views
+            builder.Services.AddTransient<AudioPlayerPage>();
+            builder.Services.AddTransient<AddPlaylistPage>();
+            builder.Services.AddTransient<AddAudioPage>();
             builder.Services.AddTransient<LoginPage>();
             builder.Services.AddTransient<SignUpPage>();
+            builder.Services.AddTransient<ProfilePage>();
+
             builder.Services.AddSingleton<HomePage>();    
             builder.Services.AddSingleton<LibraryPage>();
-            builder.Services.AddTransient<ProfilePage>();
-            builder.Services.AddTransient<AddAudioPage>();
-            builder.Services.AddTransient<AudioPlayerPage>();
+            builder.Services.AddSingleton<SearchPage>();    
+
 
             // adding Services
             builder.Services.AddSingleton<IDataService, DataService>();
             builder.Services.AddSingleton<IAuthService, AuthService>();
-            builder.Services.AddSingleton<INavigationService, NavigationService>();
             builder.Services.AddSingleton<IDialogService, DialogService>();
             builder.Services.AddSingleton<IStartupService, StartupService>();
+            builder.Services.AddSingleton<INavigationService, NavigationService>();
 
 
             // adding Shell

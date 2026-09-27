@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
+using NoorSound.Services;
 using NoorSound.Services.Interfaces;
 
 
@@ -12,17 +13,21 @@ namespace NoorSound.ViewModels
         private readonly IDialogService _dialogService;
         private readonly IDataService _dataService;
 
+        private readonly INavigationService _navigationService;
+
         [ObservableProperty]
         public partial string AdminName { get; set; } = string.Empty;
 
         public ProfileViewModel(
             IDialogService dialogService,
             IAuthService authService,
-            IDataService dataService)
+            IDataService dataService,
+            INavigationService navigationService)
         {
             _authService = authService;
             _dialogService = dialogService;
             _dataService = dataService;
+            _navigationService = navigationService;
         }
 
 
@@ -55,11 +60,16 @@ namespace NoorSound.ViewModels
 
                 return;
             }
-            
-
-
-
         }
-       
+
+        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
+        [RelayCommand]
+        private async Task NavToAudioPage(Audio audio)
+        {
+            await _navigationService.GoToAsyncWithObject(
+                AppRoutes.AddPlaylist,
+                new Dictionary<string, object> { { "Audio", audio } });
+        }
+
     }
 }

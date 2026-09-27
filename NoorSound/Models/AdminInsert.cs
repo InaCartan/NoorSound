@@ -4,6 +4,8 @@ using Postgrest.Models;
 
 namespace NoorSound.Models
 {
+
+    // ** Seems that this class isn't used in this project **
     [Table("admin")]
     public class AdminInsert : BaseModel
     {
