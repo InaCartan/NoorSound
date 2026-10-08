@@ -55,21 +55,11 @@ namespace NoorSound.ViewModels
             {
                 await _dialogService.ShowAlert(
                    "Whoops...",
-                   "You need to have an account to upload audios. It's free to sign up!"
+                   "It's seems that you're not registered. It's free!"
                    );
 
                 return;
             }
         }
-
-        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
-        [RelayCommand]
-        private async Task NavToAudioPage(Audio audio)
-        {
-            await _navigationService.GoToAsyncWithObject(
-                AppRoutes.AddPlaylist,
-                new Dictionary<string, object> { { "Audio", audio } });
-        }
-
     }
 }

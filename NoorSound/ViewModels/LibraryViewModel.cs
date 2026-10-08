@@ -1,4 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿// ** Bismi Illah Ar-Rahmaan Ar-Raheem ** \\
+
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using NoorSound.Services;
 using NoorSound.Models;
@@ -34,6 +36,8 @@ namespace NoorSound.ViewModels
         }
 
 
+
+
         [RelayCommand]
         public async Task LoadAudios()
         {
@@ -66,17 +70,6 @@ namespace NoorSound.ViewModels
         }
 
 
-        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
-        [RelayCommand]
-        private async Task NavToAudioPage(Audio audio)
-        {
-            await _navigationService.GoToAsyncWithObject(
-                AppRoutes.AddAudio, 
-                new Dictionary<string, object> { { "Audio", audio} });
-        }
-
-
-
         [RelayCommand]
         private async Task DeleteAudio(Audio audio)
         {
@@ -99,6 +92,21 @@ namespace NoorSound.ViewModels
             }
 
         }
+
+
+        // In Shaa Allah ta'ala, this func navigates to AddAudioPage
+        [RelayCommand]
+        private async Task NavToAddAudioPage()
+        {
+            await _navigationService.GoToAsync(AppRoutes.AddAudio);
+        }
+
+        [RelayCommand]
+        private async Task NavToAddPlaylistPage()
+        {
+            await _navigationService.GoToAsync(AppRoutes.AddPlaylist);
+        }
+
     }
 }
 

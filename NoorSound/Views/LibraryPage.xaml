@@ -19,13 +19,23 @@
 			<Button
             Grid.Column="1"
             Background="DarkOrange"
-            Command="{Binding NavToAudioPageCommand}"
+            Command="{Binding NavToAddAudioPageCommand}"
             HorizontalOptions="End"
-            Text="Add"
+            Text="Add Audio"
             TextColor="#eff5f3" />
 		</Grid>
 
-		<CollectionView Grid.Row="1" ItemsSource="{Binding Audios}">
+        <Grid Grid.Row="1" ColumnDefinitions="*,*">
+            <Button
+            Grid.Column="1"
+            Background="DarkOrange"
+            Command="{Binding NavToAddPlaylistPageCommand}"
+            HorizontalOptions="End"
+            Text="Add Playlist"
+            TextColor="#eff5f3" />
+        </Grid>
+
+        <CollectionView Grid.Row="1" ItemsSource="{Binding Audios}">
 			<CollectionView.ItemsLayout>
 				<LinearItemsLayout ItemSpacing="4" Orientation="Vertical" />
 			</CollectionView.ItemsLayout>

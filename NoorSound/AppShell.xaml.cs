@@ -17,6 +17,8 @@ namespace NoorSound
             _authService = authService;
 
             Routing.RegisterRoute(AppRoutes.AddAudio, typeof(AddAudioPage));
+            Routing.RegisterRoute(AppRoutes.AddPlaylist, typeof(AddPlaylistPage));
+
             Routing.RegisterRoute(AppRoutes.AudioPlayer, typeof(AudioPlayerPage));
             Routing.RegisterRoute(AppRoutes.Profile, typeof(ProfilePage));
         }

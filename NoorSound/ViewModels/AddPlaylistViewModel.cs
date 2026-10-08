@@ -6,7 +6,7 @@ using NoorSound.Services.Interfaces;
 
 namespace NoorSound.ViewModels
 {
-    public partial class AddPlaylistViewModel
+    public partial class AddPlaylistViewModel : ObservableObject
     {
         private readonly IDataService _dataService;
         private readonly IAuthService _authService;
@@ -21,7 +21,7 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         public partial string NewPlaylistName { get; set; } = string.Empty;
 
-
+           
         public AddPlaylistViewModel(
             IDataService dataService,
             IAuthService authService,
@@ -81,8 +81,8 @@ namespace NoorSound.ViewModels
             }
             catch
             {
-            //    // Image and Audio files may be uploaded to Supabase storage, while the nothing has been added to audio table in database.
-            //    // In Shaa Allah ta'ala, thus these two files need to be deleted from Supabase storage.
+            //    // playlist might be uploaded to Supabase storage, while nothing has been added to audio table in database.
+            //    // In Shaa Allah ta'ala, thus this file need to be deleted from Supabase storage.
             //    if (!string.IsNullOrWhiteSpace(NewPlaylistName))
             //    {
             //        await _dataService.DeleteFileFromStorage("playlists", NewPlaylistName);
@@ -95,48 +95,7 @@ namespace NoorSound.ViewModels
         }
 
 
-        [RelayCommand]
-        private async Task AddPlaylist1()
-        {
-            if (string.IsNullOrWhiteSpace(NewPlaylistName))
-            {
-                await _dialogService.ShowAlertAsync("Error", "Please enter a playlist name.", "OK");
-                return;
-            }
-            var currentUser = await _authService.GetCurrentUserAsync();
-            if (currentUser == null)
-            {
-                await _dialogService.ShowAlertAsync("Error", "You must be logged in to make a playlist.", "OK");
-                return;
-            }
-            var newPlaylist = new Playlist
-            {
-                PlaylistName = NewPlaylistName,
-                AdminId = currentUser.Id
-            };
-            var makePlaylist = await _dataService.AddPlaylist(newPlaylist);
-            if (makePlaylist != null)
-            {
-                // Add selected audios to the playlist
-                foreach (var audio in Audios)
-                {
-                    var playlistAudio = new PlaylistAudio
-                    {
-                        PlaylistId = makePlaylist.Id,
-                        audioId = audio.Id
-                    };
-                    await _dataService.AddAudioToPlaylistAsync(playlistAudio);
-                }
-                await _dialogService.ShowAlertAsync("Success", "Playlist made successfully!", "OK");
-                await _navigationService.GoBackAsync();
-            }
-            else
-            {
-                await _dialogService.ShowAlertAsync("Error", "Failed to make playlist. Please try again.", "OK");
-            }
-
-        }
-
+       
 
 
 
