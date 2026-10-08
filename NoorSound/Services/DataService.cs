@@ -84,20 +84,18 @@ namespace NoorSound.Services
             await _supabaseClient.From<PlaylistInsert>().Insert(playlist);
         }
 
-        public async Task<IEnumerable<Playlist>> GetPlaylists()
-        {
-            var response = await _supabaseClient.From<Playlist>().Get();
-
-            return response.Models.OrderByDescending(plst => plst.MadeAt);
-        }
-
 
         public async Task AddAudioToPlaylist(PlaylistAudioInsert playlistAudio)
         {
             await _supabaseClient.From<PlaylistAudioInsert>().Insert(playlistAudio);
         }
 
-        
+        public async Task<IEnumerable<Playlist>> GetPlaylists()
+        {
+            var response = await _supabaseClient.From<Playlist>().Get();
+
+            return response.Models.OrderByDescending(plst => plst.MadeAt);
+        }
 
         public async Task<IEnumerable<PlaylistAudio>> GetPlaylistAudios()
         {

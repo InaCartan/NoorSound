@@ -81,12 +81,6 @@ namespace NoorSound.ViewModels
             }
             catch
             {
-            //    // playlist might be uploaded to Supabase storage, while nothing has been added to audio table in database.
-            //    // In Shaa Allah ta'ala, thus this file need to be deleted from Supabase storage.
-            //    if (!string.IsNullOrWhiteSpace(NewPlaylistName))
-            //    {
-            //        await _dataService.DeleteFileFromStorage("playlists", NewPlaylistName);
-            //    }
 
                 await _dialogService.ShowAlert("Error", "Something didn't work, try again");
                 return;
