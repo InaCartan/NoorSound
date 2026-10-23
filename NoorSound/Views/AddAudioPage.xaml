@@ -8,44 +8,43 @@
              
              x:Class="NoorSound.Views.AddAudioPage"
              Title="Add Audio">
-    
-	<ScrollView>
-		<VerticalStackLayout Padding="24" Spacing="16">
 
-			<Label Text="Audio Name" FontAttributes="Bold" />
-			<Entry Placeholder="Enter audio name"
+    <ScrollView>
+        <VerticalStackLayout Padding="24" Spacing="16">
+
+            <Label Text="Audio Name" FontAttributes="Bold" />
+            <Entry Placeholder="Enter audio name"
                    Text="{Binding NewAudioName}" />
 
 
-			<!-- Image Picker -->
-			<Label Text="Cover Image" FontAttributes="Bold" />
-			<Button Text="Pick Image"
+            <!-- Image Picker -->
+            <Label Text="Cover Image" FontAttributes="Bold" />
+            <Button Text="Pick Image"
                     Command="{Binding PickImageCommand}" />
-			<Image Source="{Binding NewImageUrl}"
+            <Image Source="{Binding NewImageUrl}"
                    HeightRequest="120"
                    Aspect="AspectFit"
                    IsVisible="{Binding NewImageUrl, Converter={StaticResource StringToBoolConverter}}" />
 
-			<!-- Audio Picker -->
-			<Label Text="Audio File" FontAttributes="Bold" />
-			<Button Text="Pick Audio File"
+            <!-- Audio Picker -->
+            <Label Text="Audio File" FontAttributes="Bold" />
+            <Button Text="Pick Audio File"
                     Command="{Binding PickAudioCommand}" />
-			<Label Text="{Binding NewAudioUrl}"
+            <Label Text="{Binding NewAudioUrl}"
                    FontSize="12"
                    TextColor="Gray"
                    LineBreakMode="TailTruncation"
                    IsVisible="{Binding NewAudioUrl, Converter={StaticResource StringToBoolConverter}}" />
 
-			<!-- Submit -->
-			<Button Text="Add Audio"
+            <!-- Submit -->
+            <Button Text="Add Audio"
                     Command="{Binding AddAudioCommand}"
                     Margin="0,16,0,0" />
 
-			<ActivityIndicator IsRunning="{Binding IsBusy}"
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
                                IsVisible="{Binding IsBusy}"
                                HorizontalOptions="Center" />
 
-		</VerticalStackLayout>
-	</ScrollView>
-
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

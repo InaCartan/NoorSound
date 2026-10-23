@@ -37,20 +37,20 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task AddPlaylist()
         {
-            if (string.IsNullOrWhiteSpace(NewPlaylistName))
-            {
-                await _dialogService.ShowAlert(
-                    "Whoops...",
-                    "Remember to name your playlist"
-                    );
-            }
-
             var userId = _authService.CurrentUserId();
             if (userId == null)
             {
                 await _dialogService.ShowAlert(
                     "Sorry...",
                     "You need an account to make a playlist. Sign up, it's free!"
+                    );
+            }
+
+            if (string.IsNullOrWhiteSpace(NewPlaylistName))
+            {
+                await _dialogService.ShowAlert(
+                    "Whoops...",
+                    "Remember to name your playlist"
                     );
             }
 
@@ -81,7 +81,6 @@ namespace NoorSound.ViewModels
             }
             catch
             {
-
                 await _dialogService.ShowAlert("Error", "Something didn't work, try again");
                 return;
             }
