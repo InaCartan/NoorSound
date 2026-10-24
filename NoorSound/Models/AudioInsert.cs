@@ -8,6 +8,10 @@ namespace NoorSound.Models
     [Table("audio")]
     public class AudioInsert : BaseModel
     {
+
+        [PrimaryKey("id", false)]
+        public long Id { get; set; }
+
         [Column("audio_name")]
         public string AudioName { get; set; } = string.Empty;
 

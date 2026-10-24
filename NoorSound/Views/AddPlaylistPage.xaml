@@ -11,10 +11,72 @@
 
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
+
             <Label Text="Name of playlist" FontAttributes="Bold" />
             <Entry Placeholder="Enter the name of the playlist"
                    Text="{Binding NewPlaylistName}" />
-            
+
+            <!-- Pick from the user's own audios -->
+            <Label Text="Add from your audios" FontAttributes="Bold" />
+
+            <Label Text="You haven't uploaded any audios yet. Upload one below."
+                   TextColor="Gray"
+                   IsVisible="{Binding HasNoAudios}" />
+
+            <!-- BindableLayout (not CollectionView), because a CollectionView inside a ScrollView breaks scrolling -->
+            <VerticalStackLayout BindableLayout.ItemsSource="{Binding MyAudios}">
+                <BindableLayout.ItemTemplate>
+                    <DataTemplate x:DataType="viewmodel:SelectableAudio">
+                        <HorizontalStackLayout Spacing="12">
+                            <CheckBox IsChecked="{Binding IsSelected}"
+                                      VerticalOptions="Center" />
+                            <Label Text="{Binding Audio.AudioName}"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </VerticalStackLayout>
+
+            <!-- Upload a new audio -->
+            <Button Text="Upload a new audio"
+                    Command="{Binding ToggleUploadFormCommand}" />
+
+            <VerticalStackLayout Spacing="12"
+                                 IsVisible="{Binding ShowUploadForm}">
+
+                <Label Text="Audio Name" FontAttributes="Bold" />
+                <Entry Placeholder="Enter audio name"
+                       Text="{Binding NewAudioName}" />
+
+                <Label Text="Cover Image" FontAttributes="Bold" />
+                <Button Text="Pick Image"
+                        Command="{Binding PickImageCommand}" />
+                <Image Source="{Binding NewImageUrl}"
+                       HeightRequest="120"
+                       Aspect="AspectFit"
+                       IsVisible="{Binding NewImageUrl, Converter={StaticResource StringToBoolConverter}}" />
+
+                <Label Text="Audio File" FontAttributes="Bold" />
+                <Button Text="Pick Audio File"
+                        Command="{Binding PickAudioCommand}" />
+                <Label Text="{Binding NewAudioUrl}"
+                       FontSize="12"
+                       TextColor="Gray"
+                       LineBreakMode="TailTruncation"
+                       IsVisible="{Binding NewAudioUrl, Converter={StaticResource StringToBoolConverter}}" />
+
+                <Button Text="Upload audio"
+                        Command="{Binding UploadAudioCommand}" />
+            </VerticalStackLayout>
+
+            <!-- Submit -->
+            <Button Text="Add Playlist"
+                    Command="{Binding AddPlaylistCommand}"
+                    Margin="0,16,0,0" />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                               IsVisible="{Binding IsBusy}"
+                               HorizontalOptions="Center" />
 
         </VerticalStackLayout>
     </ScrollView>

@@ -24,9 +24,10 @@ namespace NoorSound.Services
 
         // ------- Audio ------- 
 
-        public async Task AddAudio(AudioInsert audio)
+        public async Task<long> AddAudio(AudioInsert audio)
         {
-            await _supabaseClient.From<AudioInsert>().Insert(audio);
+            var response = await _supabaseClient.From<AudioInsert>().Insert(audio);
+            return response.Models.First().Id;
             
         }
 
@@ -79,16 +80,25 @@ namespace NoorSound.Services
 
         // ------- Playlist ------- 
 
-        public async Task AddPlaylist(PlaylistInsert playlist)
+        public async Task<long> AddPlaylist(PlaylistInsert playlist)
         {
-            await _supabaseClient.From<PlaylistInsert>().Insert(playlist);
+            var response = await _supabaseClient.From<PlaylistInsert>().Insert(playlist);
+            return response.Models.First().Id;
         }
 
 
-        public async Task AddAudioToPlaylist(PlaylistAudioInsert playlistAudio)
+        public async Task AddAudiosToPlaylist(IEnumerable<PlaylistAudioInsert> playlistAudios)
         {
-            await _supabaseClient.From<PlaylistAudioInsert>().Insert(playlistAudio);
+            await _supabaseClient.From<PlaylistAudioInsert>().Insert(playlistAudios.ToList());
         }
+
+        public async Task DeletePlaylist(long id)
+        {
+            await _supabaseClient.From<Playlist>().Where(p => p.Id == id).Delete();
+        }
+
+
+        // ------- Playlist (junction table) ------- 
 
         public async Task<IEnumerable<Playlist>> GetPlaylists()
         {
@@ -114,6 +124,14 @@ namespace NoorSound.Services
                 .Single();
         }
 
+        public async Task<IEnumerable<Audio>> GetAudiosByAdmin(string adminId)
+        {
+            var response = await _supabaseClient.From<Audio>()
+                .Where(a => a.AdminId == adminId)
+                .Get();
+
+            return response.Models.OrderByDescending(a => a.MadeAt);
+        }
 
 
         // ------- Storage ------- 

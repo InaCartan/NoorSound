@@ -8,6 +8,9 @@ namespace NoorSound.Models
     [Table("playlist")]
     public class PlaylistInsert : BaseModel
     {
+        [PrimaryKey("id", false)]
+        public long Id { get; set; }
+
         [Column("playlist_name")]
         public string PlaylistName { get; set; } = string.Empty;
 
