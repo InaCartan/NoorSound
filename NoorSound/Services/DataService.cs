@@ -92,6 +92,36 @@ namespace NoorSound.Services
             await _supabaseClient.From<PlaylistAudioInsert>().Insert(playlistAudios.ToList());
         }
 
+
+        public async Task<IEnumerable<Audio>> GetAudiosInPlaylist(long playlistId)
+        {
+            // 1) The junction rows of this playlist
+            var junction = await _supabaseClient.From<PlaylistAudio>()
+                .Where(pa => pa.PlaylistId == playlistId)
+                .Get();
+
+            var audioIds = junction.Models.Select(pa => pa.audioId).ToList();
+
+            if (audioIds.Count == 0)
+            {
+                return Enumerable.Empty<Audio>();
+            }
+
+            // 2) The audios themselves
+            var audios = await _supabaseClient.From<Audio>()
+                .Filter("id", Postgrest.Constants.Operator.In, audioIds)
+                .Get();
+
+            // Keep the order in which they were added to the playlist
+            var audioById = audios.Models.ToDictionary(a => a.Id);
+
+            return junction.Models
+                .OrderBy(pa => pa.MadeAt)
+                .Where(pa => audioById.ContainsKey(pa.audioId))
+                .Select(pa => audioById[pa.audioId])
+                .ToList();
+        }
+
         public async Task DeletePlaylist(long id)
         {
             await _supabaseClient.From<Playlist>().Where(p => p.Id == id).Delete();

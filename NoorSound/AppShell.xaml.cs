@@ -20,6 +20,8 @@ namespace NoorSound
             Routing.RegisterRoute(AppRoutes.AddPlaylist, typeof(AddPlaylistPage));
 
             Routing.RegisterRoute(AppRoutes.AudioPlayer, typeof(AudioPlayerPage));
+            Routing.RegisterRoute(nameof(PlaylistPage), typeof(PlaylistPage));
+            
             Routing.RegisterRoute(AppRoutes.Profile, typeof(ProfilePage));
         }
 

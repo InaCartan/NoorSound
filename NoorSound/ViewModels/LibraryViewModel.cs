@@ -2,6 +2,7 @@
 
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using NoorSound.Views;
 using NoorSound.Services;
 using NoorSound.Models;
 using System.Collections.ObjectModel;
@@ -21,6 +22,8 @@ namespace NoorSound.ViewModels
         // In Shaa Allah, ObservableCollection is used to update the ui if a change happens
         // (gives notification when items get added or removed). 
         public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
+
+        public ObservableCollection<Playlist> Playlists { get; } = new();
 
 
         public LibraryViewModel(
@@ -92,6 +95,40 @@ namespace NoorSound.ViewModels
             }
 
         }
+
+        public async Task LoadPlaylists()
+        {
+            try
+            {
+                // Fetch first, so a failed load doesn't wipe the list
+                var playlists = await _dataService.GetPlaylists();
+
+                Playlists.Clear();
+                foreach (var playlist in playlists)
+                {
+                    Playlists.Add(playlist);
+                }
+            }
+            catch
+            {
+                await _dialogService.ShowAlert("Whoops...", "Unable to load your playlists");
+            }
+        }
+
+        [RelayCommand]
+        private async Task OpenPlaylist(Playlist? playlist)
+        {
+            if (playlist is null) return;
+
+            await _navigationService.GoToAsyncWithObject(
+                nameof(PlaylistPage),
+                new Dictionary<string, object>
+                {
+                    ["playlistId"] = playlist.Id,
+                    ["playlistName"] = playlist.PlaylistName
+                });
+        }
+
 
 
         // In Shaa Allah ta'ala, this func navigates to AddAudioPage

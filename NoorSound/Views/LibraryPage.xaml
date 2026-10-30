@@ -2,118 +2,169 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="NoorSound.Views.LibraryPage"
-             
+
 			 xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
 			 x:DataType="viewmodel:LibraryViewModel"
 			 xmlns:model="clr-namespace:NoorSound.Models"
-             
+
 			 xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="LibraryPage">
 
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
 
-    <Grid
-    Margin="20"
-    RowDefinitions="Auto,*"
-    RowSpacing="16">
+            <!-- Buttons (unchanged) -->
+            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <Button
+                    Grid.Column="1"
+                    Background="DarkOrange"
+                    Command="{Binding NavToAddAudioPageCommand}"
+                    CornerRadius="20"
+                    FontSize="Small"
+                    HeightRequest="40"
+                    Padding="16,0"
+                    Text="+ Audio"
+                    TextColor="#eff5f3" />
 
-        <Grid Grid.Row="0" ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10">
+                <Button
+                    Grid.Column="2"
+                    Background="Transparent"
+                    BorderColor="DarkOrange"
+                    BorderWidth="2"
+                    Command="{Binding NavToAddPlaylistPageCommand}"
+                    CornerRadius="20"
+                    FontSize="Small"
+                    HeightRequest="40"
+                    Padding="16,0"
+                    Text="+ Playlist"
+                    TextColor="DarkOrange" />
+            </Grid>
 
-            <Button
-                Grid.Column="1"
-                Background="DarkOrange"
-                Command="{Binding NavToAddAudioPageCommand}"
-                CornerRadius="20"
-                FontSize="Small"
-                HeightRequest="40"
-                Padding="16,0"
-                Text="+ Audio"
-                TextColor="#eff5f3" />
+            <!-- ===== Playlists ===== -->
+            <Label
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Text="Your Playlists" />
 
-            <Button
-                Grid.Column="2"
-                Background="Transparent"
-                BorderColor="DarkOrange"
-                BorderWidth="2"
-                Command="{Binding NavToAddPlaylistPageCommand}"
-                CornerRadius="20"
-                FontSize="Small"
-                HeightRequest="40"
-                Padding="16,0"
-                Text="+ Playlist"
-                TextColor="DarkOrange" />
-        </Grid>
+            <CollectionView
+                ItemsSource="{Binding Playlists}"
+                HorizontalScrollBarVisibility="Never"
+                HeightRequest="130">
 
-        <!-- Section title -->
-        <Label
-            Grid.Row="1"
-            FontAttributes="Bold"
-            FontSize="Medium"
-            Text="Your Audios" />
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="12" Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
 
-        <CollectionView 
-            Grid.Row="1" 
-            ItemsSource="{Binding Audios}"
-            HorizontalScrollBarVisibility="Never"
-            VerticalOptions="Start">
+                <CollectionView.EmptyView>
+                    <Label Text="No playlists yet. Tap + Playlist to make one."
+                           TextColor="Gray"
+                           VerticalOptions="Center" />
+                </CollectionView.EmptyView>
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout ItemSpacing="12" Orientation="Horizontal" />
-            </CollectionView.ItemsLayout>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Playlist">
+                        <Border
+                            Padding="15"
+                            Background="#601d2021"
+                            Stroke="Dimgray"
+                            StrokeThickness="2"
+                            WidthRequest="180"
+                            HeightRequest="110">
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="model:Audio">
-                    <Border
-                        Padding="15"
-                        Background="#601d2021"
-                        Stroke="Dimgray"
-                        StrokeThickness="2"
-                        WidthRequest="240"
-                        HeightRequest="400">
-                        
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="10,10,10,10" />
-                        </Border.StrokeShape>
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10,10,10,10" />
+                            </Border.StrokeShape>
 
-                        <Grid RowDefinitions="Auto,*" RowSpacing="8">
-                            <Image
-                                Grid.Row="0"
-                                Aspect="AspectFill"
-                                HeightRequest="200"
-                                HorizontalOptions="Fill"
-                                Source="{Binding ImageUrl}"
+                            <!-- Tap a playlist to open PlaylistPage -->
+                            <Border.GestureRecognizers>
+                                <TapGestureRecognizer
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:LibraryViewModel}}, Path=OpenPlaylistCommand}"
+                                    CommandParameter="{Binding .}" />
+                            </Border.GestureRecognizers>
+
+                            <Label
+                                FontAttributes="Bold"
+                                FontSize="Medium"
+                                HorizontalOptions="Center"
+                                LineBreakMode="TailTruncation"
+                                MaxLines="2"
+                                Text="{Binding PlaylistName}"
                                 VerticalOptions="Center" />
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-                            <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
-                                <Label
+            <!-- ===== Audios (your existing list, unchanged) ===== -->
+            <Label
+                FontAttributes="Bold"
+                FontSize="Medium"
+                Text="Your Audios" />
+
+            <CollectionView
+                ItemsSource="{Binding Audios}"
+                HorizontalScrollBarVisibility="Never"
+                HeightRequest="420">
+
+                <CollectionView.ItemsLayout>
+                    <LinearItemsLayout ItemSpacing="12" Orientation="Horizontal" />
+                </CollectionView.ItemsLayout>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="model:Audio">
+                        <Border
+                            Padding="15"
+                            Background="#601d2021"
+                            Stroke="Dimgray"
+                            StrokeThickness="2"
+                            WidthRequest="240"
+                            HeightRequest="400">
+
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="10,10,10,10" />
+                            </Border.StrokeShape>
+
+                            <Grid RowDefinitions="Auto,*" RowSpacing="8">
+                                <Image
                                     Grid.Row="0"
-                                    FontAttributes="Bold"
-                                    FontSize="Medium"
-                                    LineBreakMode="TailTruncation"
-                                    MaxLines="1"
-                                    Text="{Binding AudioName}" />
+                                    Aspect="AspectFill"
+                                    HeightRequest="200"
+                                    HorizontalOptions="Fill"
+                                    Source="{Binding ImageUrl}"
+                                    VerticalOptions="Center" />
 
-                                <Label
-                                    Grid.Row="1"
-                                    Margin="0,2"
-                                    FontSize="Small"
-                                    LineBreakMode="TailTruncation"
-                                    MaxLines="1"
-                                    Text="{Binding Admin.Name}" />
+                                <Grid Grid.Row="1" RowDefinitions="Auto,Auto,Auto">
+                                    <Label
+                                        Grid.Row="0"
+                                        FontAttributes="Bold"
+                                        FontSize="Medium"
+                                        LineBreakMode="TailTruncation"
+                                        MaxLines="1"
+                                        Text="{Binding AudioName}" />
 
-                                <Button
-                                    Grid.Row="2"
-                                    Margin="0,5,0,0"
-                                    BackgroundColor="OrangeRed"
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:LibraryViewModel}}, Path=DeleteAudioCommand}"
-                                    CommandParameter="{Binding .}"
-                                    Text="Delete"
-                                    TextColor="#eff5f3" />
-                                
+                                    <Label
+                                        Grid.Row="1"
+                                        Margin="0,2"
+                                        FontSize="Small"
+                                        LineBreakMode="TailTruncation"
+                                        MaxLines="1"
+                                        Text="{Binding Admin.Name}" />
+
+                                    <Button
+                                        Grid.Row="2"
+                                        Margin="0,5,0,0"
+                                        BackgroundColor="OrangeRed"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:LibraryViewModel}}, Path=DeleteAudioCommand}"
+                                        CommandParameter="{Binding .}"
+                                        Text="Delete"
+                                        TextColor="#eff5f3" />
+                                </Grid>
                             </Grid>
-                        </Grid>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </Grid>
+                        </Border>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

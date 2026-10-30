@@ -15,6 +15,7 @@ namespace NoorSound.Services.Interfaces
         Task<long> AddPlaylist(PlaylistInsert playlist);
         Task <IEnumerable<Playlist>> GetPlaylists();
         Task DeletePlaylist(long id);
+        Task<IEnumerable<Audio>> GetAudiosInPlaylist(long playlistId);
 
 
         // -- Playlists (junction table) --

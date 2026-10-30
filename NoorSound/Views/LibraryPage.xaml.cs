@@ -21,6 +21,7 @@ public partial class LibraryPage : ContentPage
     {
         base.OnAppearing();
         await _vm.LoadAudios();
+        await _vm.LoadPlaylists();
     }
 
 }

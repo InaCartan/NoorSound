@@ -22,7 +22,7 @@
             ItemsSource="{Binding Audios}"
             VerticalScrollBarVisibility="Never">
 
-        <!-- Kindly, don't uncommit this
+        <!-- Kindly, don't uncommit this (it's the nav to profile page)
         <CollectionView.Header>
             <Label Text="Profil" FontAttributes="Bold">
                 <Label.GestureRecognizers>

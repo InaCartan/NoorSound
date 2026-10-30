@@ -17,7 +17,7 @@ namespace NoorSound.Models
         // ** Foreign keys & ID's**
 
         [Column("playlist_id")]
-        public string PlaylistId { get; set; } = string.Empty; // ID
+        public long PlaylistId { get; set; }
 
         [Reference(typeof(Playlist), includeInQuery: true)] // Foreign key to Playlist
         public Playlist? Playlist { get; set; }

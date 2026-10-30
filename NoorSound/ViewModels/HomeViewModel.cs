@@ -5,6 +5,7 @@ using NoorSound.Models;
 using NoorSound.Services;
 using NoorSound.Services.Interfaces;
 using System.Collections.ObjectModel;
+
 namespace NoorSound.ViewModels
 {
     public partial class HomeViewModel : ObservableObject
@@ -17,7 +18,10 @@ namespace NoorSound.ViewModels
         // (gives notification when items get added or removed). 
         public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
 
-        public HomeViewModel(IDataService dataService, IDialogService dialogService, INavigationService navigationService)
+        public HomeViewModel(
+            IDataService dataService, 
+            IDialogService dialogService, 
+            INavigationService navigationService)
         {
             _dataService = dataService;
             _dialogService = dialogService;
