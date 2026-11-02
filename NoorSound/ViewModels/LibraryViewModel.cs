@@ -138,6 +138,8 @@ namespace NoorSound.ViewModels
             await _navigationService.GoToAsync(AppRoutes.AddAudio);
         }
 
+
+        // In Shaa Allah ta'ala, this func navigates to AddPlaylistPage
         [RelayCommand]
         private async Task NavToAddPlaylistPage()
         {

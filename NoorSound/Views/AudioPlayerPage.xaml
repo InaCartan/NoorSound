@@ -10,7 +10,10 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              Title="">
     
-    <VerticalStackLayout>
+    <VerticalStackLayout 
+        Padding="30,0"
+        Spacing="25">
+
         <Label 
             Text="BismiIllah Ar-Rahmaan Ar-Raheem"
             VerticalOptions="Center" 
@@ -18,23 +21,29 @@
             FontSize="30"/>
 
         <Image
-        Source="{Binding CurrentAudio.ImageUrl}"
-        HeightRequest="300" />
+            Source="{Binding CurrentAudio.ImageUrl}"
+            HeightRequest="300" />
 
         <Label
-        Text="{Binding CurrentAudio.AudioName}"
-        FontSize="24"
-        HorizontalOptions="Center" />
+            Text="{Binding CurrentAudio.AudioName}"
+            FontSize="24"
+            HorizontalOptions="Center" />
 
         <Label
-        Text="{Binding CurrentAudio.Admin.Name}"
-        HorizontalOptions="Center" />
+            Text="{Binding CurrentAudio.Admin.Name}"
+            HorizontalOptions="Center" />
 
-        
         <toolkit:MediaElement
         Source="{Binding CurrentAudio.AudioUrl}"
+        MetadataTitle="{Binding CurrentAudio.AudioName}"
+        MetadataArtist="{Binding CurrentAudio.Admin.Name}"
+        MetadataArtworkUrl="{Binding CurrentAudio.ImageUrl}"       
+        ShouldAutoPlay="False"
         ShouldShowPlaybackControls="True"
         HeightRequest="100" />
+
+
+        
 
     </VerticalStackLayout>
 </ContentPage>
