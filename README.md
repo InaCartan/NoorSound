@@ -1,5 +1,4 @@
-# NoorSound
-
+<h1 align="center">بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</h1>
 NoorSound is a cross-platform audio app where users can upload their own audios, organize them in playlists, and listen to audios shared by other users.
 
 > 🚧 **Work in progress:** this project is still under active development. Features may change, and some parts are not finished yet.
