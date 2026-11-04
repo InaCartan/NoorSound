@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using NoorSound.Models;
 using NoorSound.Services;
 using NoorSound.Services.Interfaces;
+using NoorSound.Views;
 using System.Collections.ObjectModel;
 
 namespace NoorSound.ViewModels
@@ -18,6 +19,18 @@ namespace NoorSound.ViewModels
         // (gives notification when items get added or removed). 
         public ObservableCollection<Audio> Audios { get; set; } = new ObservableCollection<Audio>();
 
+        // The 4 newest audios (the small tiles at the top)
+        public ObservableCollection<Audio> LatestAudios { get; } = new();
+
+        // All playlists (the "Playlists" shelf)
+        public ObservableCollection<Playlist> Playlists { get; } = new();
+
+        // True while the user pulls down to refresh (used by the RefreshView in HomePage.xaml)
+        [ObservableProperty]
+        public partial bool IsRefreshing { get; set; }
+
+
+
         public HomeViewModel(
             IDataService dataService, 
             IDialogService dialogService, 
@@ -30,17 +43,32 @@ namespace NoorSound.ViewModels
         }
 
         [RelayCommand]
-        public async Task LoadAudios()
+        public async Task LoadHome()
         {
             try
             {
-                Audios.Clear();
+                // Fetch everything first, so a failed load doesn't wipe what is already on screen
+                var audios = (await _dataService.GetAudios()).ToList();
+                var playlists = (await _dataService.GetPlaylists()).ToList();
 
-                var audios = await _dataService.GetAudios();
+                Audios.Clear();
+                LatestAudios.Clear();
+                Playlists.Clear();
 
                 foreach (var audio in audios)
                 {
                     Audios.Add(audio);
+                }
+
+                // GetAudios is already sorted newest first
+                foreach (var audio in audios.Take(4))
+                {
+                    LatestAudios.Add(audio);
+                }
+
+                foreach (var playlist in playlists)
+                {
+                    Playlists.Add(playlist);
                 }
             }
             catch
@@ -48,6 +76,38 @@ namespace NoorSound.ViewModels
                 await _dialogService.ShowAlert("Error", "Unable to load audios, try to refresh page");
             }
         }
+
+
+        // Pull-to-refresh
+        [RelayCommand]
+        private async Task Refresh()
+        {
+            try
+            {
+                await LoadHome();
+            }
+            finally
+            {
+                IsRefreshing = false;
+            }
+        }
+
+        // In Shaa Allah ta'ala, this func navigates to PlaylistPage (same like in LibraryViewModel)
+        [RelayCommand]
+        private async Task OpenPlaylist(Playlist? playlist)
+        {
+            if (playlist is null) return;
+
+            await _navigationService.GoToAsyncWithObject(
+                nameof(PlaylistPage),
+                new Dictionary<string, object>
+                {
+                    ["playlistId"] = playlist.Id,
+                    ["playlistName"] = playlist.PlaylistName
+                });
+        }
+
+
 
         // In Shaa Allah ta'ala, this func navigates to AudioPlayerPage
         [RelayCommand]
