@@ -8,7 +8,7 @@
              
              x:Class="NoorSound.Views.AddAudioPage"
              Title="Add Audio">
-
+    
     <ScrollView>
         <VerticalStackLayout Padding="24" Spacing="16">
 

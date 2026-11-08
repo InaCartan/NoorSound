@@ -135,7 +135,15 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task NavToAddAudioPage()
         {
-            await _navigationService.GoToAsync(AppRoutes.AddAudio);
+            try
+            {
+
+                await _navigationService.GoToAsync(AppRoutes.AddAudio);
+            } 
+            catch (Exception ex)
+            {
+                await _dialogService.ShowAlert("Exception message", ex.Message);
+            }
         }
 
 
@@ -143,7 +151,14 @@ namespace NoorSound.ViewModels
         [RelayCommand]
         private async Task NavToAddPlaylistPage()
         {
-            await _navigationService.GoToAsync(AppRoutes.AddPlaylist);
+            try 
+            { 
+                await _navigationService.GoToAsync(AppRoutes.AddPlaylist);
+            }
+            catch (Exception ex)
+            {
+                await _dialogService.ShowAlert("Exception message", ex.Message);
+            }
         }
 
     }
