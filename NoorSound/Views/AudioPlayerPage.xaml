@@ -1,49 +1,91 @@
 <?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+<ContentPage x:Class="NoorSound.Views.AudioPlayerPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="NoorSound.Views.AudioPlayerPage"
              
+
              xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
              x:DataType="viewmodel:AudioPlayerViewModel"
-             xmlns:model="clr-namespace:NoorSound.Models"
-             
-             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+
              Title="">
-    
-    <VerticalStackLayout 
-        Padding="30,0"
-        Spacing="25">
 
-        <Label 
-            Text="BismiIllah Ar-Rahmaan Ar-Raheem"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center"
-            FontSize="30"/>
+    <!-- Dark green fading into black, like the mockup -->
+    <ContentPage.Background>
+        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#16302F" Offset="0.0" />
+            <GradientStop Color="#0F0E0B" Offset="0.62" />
+        </LinearGradientBrush>
+    </ContentPage.Background>
 
-        <Image
-            Source="{Binding CurrentAudio.ImageUrl}"
-            HeightRequest="300" />
+    <!-- The audio itself is played by PlayerService (its MediaElement lives on HomePage),
+         so this page only shows the state and has the controls. -->
+    <ScrollView>
+        <VerticalStackLayout Padding="24,8,24,24" Spacing="20">
 
-        <Label
-            Text="{Binding CurrentAudio.AudioName}"
-            FontSize="24"
-            HorizontalOptions="Center" />
+            <Label Text="بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
+                   TextColor="#E3BD5A"
+                   FontSize="26"
+                   HorizontalOptions="Center" />
 
-        <Label
-            Text="{Binding CurrentAudio.Admin.Name}"
-            HorizontalOptions="Center" />
+            <!-- Cover -->
+            <Border HeightRequest="320"
+                    StrokeThickness="0"
+                    BackgroundColor="#1B1913">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="14" />
+                </Border.StrokeShape>
+                <Image Source="{Binding CurrentAudio.ImageUrl}" Aspect="AspectFill" />
+            </Border>
 
-        <toolkit:MediaElement
-        Source="{Binding CurrentAudio.AudioUrl}"
-        MetadataTitle="{Binding CurrentAudio.AudioName}"
-        MetadataArtist="{Binding CurrentAudio.Admin.Name}"
-        MetadataArtworkUrl="{Binding CurrentAudio.ImageUrl}"       
-        ShouldAutoPlay="False"
-        ShouldShowPlaybackControls="True"
-        HeightRequest="100" />
+            <!-- Title + uploader -->
+            <VerticalStackLayout Spacing="2">
+                <Label Text="{Binding CurrentAudio.AudioName}"
+                       TextColor="#F4F0E6"
+                       FontSize="24"
+                       FontAttributes="Bold"
+                       LineBreakMode="TailTruncation"
+                       MaxLines="2" />
+                <Label Text="{Binding CurrentAudio.Admin.Name}"
+                       TextColor="#A39B86"
+                       FontSize="15" />
+            </VerticalStackLayout>
 
+            <!-- Progress -->
+            <VerticalStackLayout Spacing="0">
+                <Slider x:Name="ProgressSlider"
+                        Minimum="0"
+                        Maximum="1"
+                        Value="{Binding Progress, Mode=OneWay}"
+                        MinimumTrackColor="#E3BD5A"
+                        MaximumTrackColor="#3A3526"
+                        ThumbColor="#E3BD5A"
+                        DragStarted="OnDragStarted"
+                        DragCompleted="OnDragCompleted" />
 
-        
+                <Grid ColumnDefinitions="*,*">
+                    <Label Grid.Column="0"
+                           Text="{Binding PositionText}"
+                           TextColor="#A39B86"
+                           FontSize="12" />
+                    <Label Grid.Column="1"
+                           Text="{Binding DurationText}"
+                           TextColor="#A39B86"
+                           FontSize="12"
+                           HorizontalOptions="End" />
+                </Grid>
+            </VerticalStackLayout>
 
-    </VerticalStackLayout>
+            <!-- Play / pause -->
+            <ImageButton Source="{Binding PlayPauseDarkIcon}"
+                         Command="{Binding TogglePlayPauseCommand}"
+                         WidthRequest="68"
+                         HeightRequest="68"
+                         CornerRadius="34"
+                         Padding="18"
+                         BackgroundColor="#E3BD5A"
+                         HorizontalOptions="Center"
+                         SemanticProperties.Description="Play or pause" />
+
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

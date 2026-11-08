@@ -1,6 +1,8 @@
 ﻿using NoorSound.Services;
 using NoorSound.Services.Interfaces;
+using NoorSound.ViewModels;
 using NoorSound.Views;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace NoorSound
 {
@@ -41,6 +43,19 @@ namespace NoorSound
                 await GoToAsync(AppRoutes.Home);
             }
             
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            var player = Handler?.MauiContext?.Services.GetService<AudioPlayerViewModel>();
+
+            if (player is { IsPlayerExpanded: true })
+            {
+                player.CollapsePlayerCommand.Execute(null);
+                return true;   // handled: back only closes the player
+            }
+
+            return base.OnBackButtonPressed();
         }
     }
 }

@@ -37,8 +37,10 @@ namespace NoorSound
 
 
             // adding ViewModels
-            builder.Services.AddTransient<AudioPlayerViewModel>();
+            builder.Services.AddSingleton<IPlayerService, PlayerService>();
+            builder.Services.AddSingleton<AudioPlayerViewModel>();
             builder.Services.AddTransient<PlaylistViewModel>();
+            
 
             builder.Services.AddTransient<AddAudioViewModel>();
             builder.Services.AddTransient<AddPlaylistViewModel>();

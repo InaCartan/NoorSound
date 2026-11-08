@@ -29,16 +29,18 @@ namespace NoorSound.ViewModels
         [ObservableProperty]
         public partial bool IsRefreshing { get; set; }
 
-
+        private readonly AudioPlayerViewModel _player;
 
         public HomeViewModel(
             IDataService dataService, 
             IDialogService dialogService, 
-            INavigationService navigationService)
+            INavigationService navigationService,
+            AudioPlayerViewModel player)
         {
             _dataService = dataService;
             _dialogService = dialogService;
             _navigationService = navigationService;
+            _player = player;
 
         }
 
@@ -111,11 +113,11 @@ namespace NoorSound.ViewModels
 
         // In Shaa Allah ta'ala, this func navigates to AudioPlayerPage
         [RelayCommand]
-        private async Task NavAudioPlayerPage(Audio audio)
+        private async Task NavAudioPlayerPage(Audio? audio)
         {
-            await _navigationService.GoToAsyncWithObject(
-               AppRoutes.AudioPlayer,
-               new Dictionary<string, object> { { "Audio", audio } });
+            if (audio is null) return;
+
+            await _player.PlayAndExpandAsync(audio);
         }
 
         // In Shaa Allah ta'ala, this func navigates to ProfilePage

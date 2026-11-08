@@ -1,5 +1,7 @@
 ﻿using NoorSound.Services.Interfaces;
+using NoorSound.ViewModels;
 using System.Diagnostics;
+
 
 namespace NoorSound
 {
@@ -65,7 +67,7 @@ namespace NoorSound
             await _appShell.InitializeAsync();
         }
 
-
     }
+
 }
 

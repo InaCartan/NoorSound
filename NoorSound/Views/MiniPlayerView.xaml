@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<!-- BismiIllah Ar-Rahmaan Ar-Raheem -->
+
+<!-- The mini player. It is placed at the bottom of every tab page by the ControlTemplate in App.xaml,
+     so it sits right above the tab bar. It hides itself when nothing is playing. -->
+<ContentView xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
+             x:Class="NoorSound.Views.MiniPlayerView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:DataType="viewmodel:AudioPlayerViewModel"
+             IsVisible="{Binding HasAudio}">
+
+    <Border Margin="8,4,8,8"
+            Padding="0"
+            HeightRequest="56"
+            BackgroundColor="#2A261B"
+            StrokeThickness="0">
+
+        <Border.StrokeShape>
+            <RoundRectangle CornerRadius="10" />
+        </Border.StrokeShape>
+
+        <!-- Tap anywhere on the mini player to open the full player -->
+        <Border.GestureRecognizers>
+            <TapGestureRecognizer Command="{Binding OpenPlayerCommand}" />
+            <SwipeGestureRecognizer Direction="Up" Command="{Binding OpenPlayerCommand}" />
+        </Border.GestureRecognizers>
+
+        <Grid RowDefinitions="*,2">
+
+            <Grid Grid.Row="0"
+                  ColumnDefinitions="Auto,*,Auto"
+                  ColumnSpacing="10"
+                  Padding="8,0,4,0">
+
+                <!-- Cover -->
+                <Border Grid.Column="0"
+                        WidthRequest="40"
+                        HeightRequest="40"
+                        StrokeThickness="0"
+                        BackgroundColor="#1B1913"
+                        VerticalOptions="Center">
+                    <Border.StrokeShape>
+                        <RoundRectangle CornerRadius="6" />
+                    </Border.StrokeShape>
+                    <Image Source="{Binding CurrentAudio.ImageUrl}" Aspect="AspectFill" />
+                </Border>
+
+                <!-- Title + uploader -->
+                <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                    <Label Text="{Binding CurrentAudio.AudioName}"
+                           TextColor="#F4F0E6"
+                           FontSize="13"
+                           FontAttributes="Bold"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1" />
+                    <Label Text="{Binding CurrentAudio.Admin.Name}"
+                           TextColor="#A39B86"
+                           FontSize="12"
+                           LineBreakMode="TailTruncation"
+                           MaxLines="1" />
+                </VerticalStackLayout>
+
+                <!-- Play / pause -->
+                <ImageButton Grid.Column="2"
+                             Source="{Binding PlayPauseLightIcon}"
+                             Command="{Binding TogglePlayPauseCommand}"
+                             WidthRequest="44"
+                             HeightRequest="44"
+                             Padding="10"
+                             BackgroundColor="Transparent"
+                             VerticalOptions="Center"
+                             SemanticProperties.Description="Play or pause" />
+            </Grid>
+
+            <!-- Thin progress line at the bottom -->
+            <ProgressBar Grid.Row="1"
+                         Progress="{Binding Progress}"
+                         ProgressColor="#E3BD5A"
+                         BackgroundColor="#4A4430"
+                         HeightRequest="2" />
+        </Grid>
+    </Border>
+</ContentView>

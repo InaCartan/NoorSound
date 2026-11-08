@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
+             x:Class="NoorSound.Views.PlayerSheetView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:DataType="viewmodel:AudioPlayerViewModel"
+             InputTransparent="True"
+             SizeChanged="OnSizeChanged"
+             SafeAreaEdges="Container">
+
+    <!-- The drag gesture is on this fixed outer view, not on the sliding Sheet:
+         a view that moves itself makes its own drag values jump on Android. -->
+    <ContentView.GestureRecognizers>
+        <PanGestureRecognizer PanUpdated="OnPanUpdated" />
+    </ContentView.GestureRecognizers>
+
+    <!-- The sliding part. TranslationY="3000" keeps it below the screen until the code moves it. -->
+    <Grid x:Name="Sheet"
+          TranslationY="3000"
+          RowDefinitions="Auto,Auto,*,Auto,Auto,Auto"
+          RowSpacing="16"
+          Padding="24,0,24,24">
+
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                <GradientStop Color="#16302F" Offset="0.0" />
+                <GradientStop Color="#0F0E0B" Offset="0.62" />
+            </LinearGradientBrush>
+        </Grid.Background>
+
+        <!-- Top row: handle in the middle, close button on the right -->
+        <Grid Grid.Row="0" HeightRequest="44">
+            <BoxView WidthRequest="40" HeightRequest="4" CornerRadius="2" Color="#6B6450"
+             HorizontalOptions="Center" VerticalOptions="Center" />
+
+            <ImageButton Source="ic_close_light.png"
+                 Command="{Binding CollapsePlayerCommand}"
+                 WidthRequest="44" HeightRequest="44" Padding="10"
+                 BackgroundColor="Transparent"
+                 HorizontalOptions="End" VerticalOptions="Center"
+                 SemanticProperties.Description="Close player" />
+        </Grid>
+
+        <Label Grid.Row="1" Text="بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ"
+               TextColor="#E3BD5A" FontSize="24" HorizontalOptions="Center" />
+
+        <Border Grid.Row="2" StrokeThickness="0" BackgroundColor="#1B1913">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="14" />
+            </Border.StrokeShape>
+            <Image Source="{Binding CurrentAudio.ImageUrl}" Aspect="AspectFill" />
+        </Border>
+
+        <VerticalStackLayout Grid.Row="3" Spacing="2">
+            <Label Text="{Binding CurrentAudio.AudioName}" TextColor="#F4F0E6" FontSize="24"
+                   FontAttributes="Bold" LineBreakMode="TailTruncation" MaxLines="2" />
+            <Label Text="{Binding CurrentAudio.Admin.Name}" TextColor="#A39B86" FontSize="15" />
+        </VerticalStackLayout>
+
+        <VerticalStackLayout Grid.Row="4" Spacing="0">
+            <Slider x:Name="ProgressSlider" Minimum="0" Maximum="1"
+                    Value="{Binding Progress, Mode=OneWay}"
+                    MinimumTrackColor="#E3BD5A" MaximumTrackColor="#3A3526" ThumbColor="#E3BD5A"
+                    DragStarted="OnDragStarted" DragCompleted="OnDragCompleted" />
+            <Grid ColumnDefinitions="*,*">
+                <Label Grid.Column="0" Text="{Binding PositionText}" TextColor="#A39B86" FontSize="12" />
+                <Label Grid.Column="1" Text="{Binding DurationText}" TextColor="#A39B86" FontSize="12"
+                       HorizontalOptions="End" />
+            </Grid>
+        </VerticalStackLayout>
+
+        <ImageButton Grid.Row="5" Source="{Binding PlayPauseDarkIcon}"
+                     Command="{Binding TogglePlayPauseCommand}"
+                     WidthRequest="68" HeightRequest="68" CornerRadius="34" Padding="18"
+                     BackgroundColor="#E3BD5A" HorizontalOptions="Center"
+                     SemanticProperties.Description="Play or pause" />
+    </Grid>
+</ContentView>

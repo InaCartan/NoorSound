@@ -2,20 +2,22 @@
 
 <!-- BismiIllah Ar-Rahmaan Ar-Raheem -->
 
-<ContentPage x:Class="NoorSound.Views.HomePage"
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+
+             x:Class="NoorSound.Views.HomePage"
              x:Name="homePage"
              Title="Home"
              BackgroundColor="#0F0E0B"
              Shell.NavBarIsVisible="False"
              SafeAreaEdges="Container"
+             ControlTemplate="{StaticResource PageWithMiniPlayer}"
 
              xmlns:model="clr-namespace:NoorSound.Models"
              xmlns:viewmodel="clr-namespace:NoorSound.ViewModels"
 
-             x:DataType="viewmodel:HomeViewModel"
-    
-             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+             x:DataType="viewmodel:HomeViewModel">
 
     <ContentPage.Resources>
         <ResourceDictionary>
@@ -57,218 +59,232 @@
         </ResourceDictionary>
     </ContentPage.Resources>
 
-    <!-- Pull down to refresh -->
-    <RefreshView Command="{Binding RefreshCommand}"
-                 IsRefreshing="{Binding IsRefreshing}"
-                 RefreshColor="{StaticResource HomeGold}"
-                 BackgroundColor="Transparent">
+    <Grid>
 
-        <ScrollView VerticalScrollBarVisibility="Never">
+        <!-- ===== The ONE MediaElement of the whole app =====
+             It is hidden (1x1 and see-through), and PlayerService controls it (see HomePage.xaml.cs).
+             It lives here so the audio keeps playing when the user leaves the full player page. -->
+        <toolkit:MediaElement x:Name="MediaHost"
+                              WidthRequest="1"
+                              HeightRequest="1"
+                              HorizontalOptions="Start"
+                              VerticalOptions="Start"
+                              Opacity="0"
+                              InputTransparent="True"
+                              ShouldAutoPlay="False"
+                              ShouldShowPlaybackControls="False" />
 
-            <VerticalStackLayout Padding="16,16,16,24" Spacing="24">
+        <!-- Pull down to refresh -->
+        <RefreshView Command="{Binding RefreshCommand}"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     RefreshColor="{StaticResource HomeGold}"
+                     BackgroundColor="Transparent">
 
-                <!-- ===== Header: logo + profile ===== -->
-                <Grid ColumnDefinitions="*,Auto" HeightRequest="44">
+            <ScrollView VerticalScrollBarVisibility="Never">
 
-                    <Border Grid.Column="0"
-                            WidthRequest="36"
-                            HeightRequest="36"
-                            HorizontalOptions="Start"
-                            VerticalOptions="Center"
-                            StrokeThickness="0">
-                        <Border.StrokeShape>
-                            <RoundRectangle CornerRadius="18" />
-                        </Border.StrokeShape>
-                        <Image Source="noor_logo.png"
-                               Aspect="AspectFill"
-                               SemanticProperties.Description="NoorSound logo" />
-                    </Border>
+                <VerticalStackLayout Padding="16,16,16,24" Spacing="24">
 
-                    <ImageButton Grid.Column="1"
-                                 Source="ic_profile.png"
-                                 WidthRequest="44"
-                                 HeightRequest="44"
-                                 CornerRadius="22"
-                                 Padding="10"
-                                 BackgroundColor="{StaticResource HomeSurface}"
-                                 Command="{Binding NavProfilePageCommand}"
-                                 SemanticProperties.Description="Profile" />
-                </Grid>
+                    <!-- ===== Header: logo + profile ===== -->
+                    <Grid ColumnDefinitions="*,Auto" HeightRequest="44">
 
-                <!-- ===== Greeting ===== -->
-                <Label Text="As-Salamu alaykum"
-                       TextColor="{StaticResource HomeText}"
-                       FontSize="28"
-                       FontAttributes="Bold"
-                       Margin="0,-12,0,0" />
+                        <Border Grid.Column="0"
+                                WidthRequest="36"
+                                HeightRequest="36"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                StrokeThickness="0">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="18" />
+                            </Border.StrokeShape>
+                            <Image Source="noor_logo.png"
+                                   Aspect="AspectFill"
+                                   SemanticProperties.Description="NoorSound logo" />
+                        </Border>
 
-                <!-- =====  the 4 newest audios, 2 per row ===== -->
-                <Label Text="Recently played" Style="{StaticResource ShelfTitle}" />
-                
-                <FlexLayout BindableLayout.ItemsSource="{Binding LatestAudios}"
-                            Wrap="Wrap"
-                            JustifyContent="SpaceBetween"
-                            AlignItems="Start"
-                            AlignContent="Start"
-                            Margin="0,-8,0,0">
+                        <ImageButton Grid.Column="1"
+                                     Source="ic_profile.png"
+                                     WidthRequest="44"
+                                     HeightRequest="44"
+                                     CornerRadius="22"
+                                     Padding="10"
+                                     BackgroundColor="{StaticResource HomeSurface}"
+                                     Command="{Binding NavProfilePageCommand}"
+                                     SemanticProperties.Description="Profile" />
+                    </Grid>
 
-                    <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="model:Audio">
-                            <Border FlexLayout.Basis="48%"
-                                    HeightRequest="56"
-                                    Margin="0,0,0,8"
-                                    Padding="0"
-                                    StrokeThickness="0"
-                                    BackgroundColor="{StaticResource HomeSurface}">
+                    <!-- ===== Greeting ===== -->
+                    <Label Text="As-salamu alaykum"
+                           TextColor="{StaticResource HomeText}"
+                           FontSize="28"
+                           FontAttributes="Bold"
+                           Margin="0,-12,0,0" />
 
-                                <Border.StrokeShape>
-                                    <RoundRectangle CornerRadius="8" />
-                                </Border.StrokeShape>
+                    <!-- ===== Quick tiles (the 4 newest audios, 2 per row) ===== -->
+                    <FlexLayout BindableLayout.ItemsSource="{Binding QuickAudios}"
+                                Wrap="Wrap"
+                                JustifyContent="SpaceBetween"
+                                AlignItems="Start"
+                                AlignContent="Start"
+                                Margin="0,-8,0,0">
 
-                                <Border.GestureRecognizers>
-                                    <TapGestureRecognizer
-                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=NavAudioPlayerPageCommand}"
-                                        CommandParameter="{Binding .}" />
-                                </Border.GestureRecognizers>
-
-                                <Grid ColumnDefinitions="56,*" ColumnSpacing="10">
-                                    <Image Grid.Column="0"
-                                           Source="{Binding ImageUrl}"
-                                           Aspect="AspectFill"
-                                           WidthRequest="56"
-                                           HeightRequest="56" />
-
-                                    <Label Grid.Column="1"
-                                           Text="{Binding AudioName}"
-                                           TextColor="{StaticResource HomeText}"
-                                           FontSize="13"
-                                           FontAttributes="Bold"
-                                           LineBreakMode="TailTruncation"
-                                           MaxLines="2"
-                                           VerticalOptions="Center"
-                                           Margin="0,0,8,0" />
-                                </Grid>
-                            </Border>
-                        </DataTemplate>
-                    </BindableLayout.ItemTemplate>
-                </FlexLayout>
-
-                <!-- ===== Shelf: New uploads ===== -->
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="New uploads" Style="{StaticResource ShelfTitle}" />
-
-                    <CollectionView ItemsSource="{Binding Audios}"
-                                    HeightRequest="176"
-                                    HorizontalScrollBarVisibility="Never">
-
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
-                        </CollectionView.ItemsLayout>
-
-                        <CollectionView.EmptyView>
-                            <Label Text="No audios yet. Be the first to upload one!"
-                                   Style="{StaticResource EmptyText}" />
-                        </CollectionView.EmptyView>
-
-                        <CollectionView.ItemTemplate>
+                        <BindableLayout.ItemTemplate>
                             <DataTemplate x:DataType="model:Audio">
-                                <VerticalStackLayout WidthRequest="128" Spacing="2">
+                                <Border FlexLayout.Basis="48%"
+                                        HeightRequest="56"
+                                        Margin="0,0,0,8"
+                                        Padding="0"
+                                        StrokeThickness="0"
+                                        BackgroundColor="{StaticResource HomeSurface}">
 
-                                    <VerticalStackLayout.GestureRecognizers>
+                                    <Border.StrokeShape>
+                                        <RoundRectangle CornerRadius="8" />
+                                    </Border.StrokeShape>
+
+                                    <Border.GestureRecognizers>
                                         <TapGestureRecognizer
                                             Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=NavAudioPlayerPageCommand}"
                                             CommandParameter="{Binding .}" />
-                                    </VerticalStackLayout.GestureRecognizers>
+                                    </Border.GestureRecognizers>
 
-                                    <Border WidthRequest="128"
-                                            HeightRequest="128"
-                                            StrokeThickness="0"
-                                            BackgroundColor="{StaticResource HomeSurface}">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8" />
-                                        </Border.StrokeShape>
-                                        <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
-                                    </Border>
+                                    <Grid ColumnDefinitions="56,*" ColumnSpacing="10">
+                                        <Image Grid.Column="0"
+                                               Source="{Binding ImageUrl}"
+                                               Aspect="AspectFill"
+                                               WidthRequest="56"
+                                               HeightRequest="56" />
 
-                                    <Label Text="{Binding AudioName}"
-                                           Style="{StaticResource CardTitle}"
-                                           Margin="0,6,0,0" />
-
-                                    <Label Text="{Binding Admin.Name}"
-                                           Style="{StaticResource CardSubtitle}" />
-                                </VerticalStackLayout>
+                                        <Label Grid.Column="1"
+                                               Text="{Binding AudioName}"
+                                               TextColor="{StaticResource HomeText}"
+                                               FontSize="13"
+                                               FontAttributes="Bold"
+                                               LineBreakMode="TailTruncation"
+                                               MaxLines="2"
+                                               VerticalOptions="Center"
+                                               Margin="0,0,8,0" />
+                                    </Grid>
+                                </Border>
                             </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
+                        </BindableLayout.ItemTemplate>
+                    </FlexLayout>
+
+                    <!-- ===== Shelf: New uploads ===== -->
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="New uploads" Style="{StaticResource ShelfTitle}" />
+
+                        <CollectionView ItemsSource="{Binding Audios}"
+                                        HeightRequest="176"
+                                        HorizontalScrollBarVisibility="Never">
+
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.EmptyView>
+                                <Label Text="No audios yet. Be the first to upload one!"
+                                       Style="{StaticResource EmptyText}" />
+                            </CollectionView.EmptyView>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Audio">
+                                    <VerticalStackLayout WidthRequest="128" Spacing="2">
+
+                                        <VerticalStackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=NavAudioPlayerPageCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </VerticalStackLayout.GestureRecognizers>
+
+                                        <Border WidthRequest="128"
+                                                HeightRequest="128"
+                                                StrokeThickness="0"
+                                                BackgroundColor="{StaticResource HomeSurface}">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+                                            <Image Source="{Binding ImageUrl}" Aspect="AspectFill" />
+                                        </Border>
+
+                                        <Label Text="{Binding AudioName}"
+                                               Style="{StaticResource CardTitle}"
+                                               Margin="0,6,0,0" />
+
+                                        <Label Text="{Binding Admin.Name}"
+                                               Style="{StaticResource CardSubtitle}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
+                    <!-- ===== Shelf: Playlists ===== -->
+                    <VerticalStackLayout Spacing="12">
+
+                        <Label Text="Playlists" Style="{StaticResource ShelfTitle}" />
+
+                        <CollectionView ItemsSource="{Binding Playlists}"
+                                        HeightRequest="176"
+                                        HorizontalScrollBarVisibility="Never">
+
+                            <CollectionView.ItemsLayout>
+                                <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
+                            </CollectionView.ItemsLayout>
+
+                            <CollectionView.EmptyView>
+                                <Label Text="No playlists yet."
+                                       Style="{StaticResource EmptyText}" />
+                            </CollectionView.EmptyView>
+
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="model:Playlist">
+                                    <VerticalStackLayout WidthRequest="128" Spacing="2">
+
+                                        <VerticalStackLayout.GestureRecognizers>
+                                            <TapGestureRecognizer
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=OpenPlaylistCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </VerticalStackLayout.GestureRecognizers>
+
+                                        <!-- Playlists have no cover image, so a gold geometric star is drawn instead -->
+                                        <Border WidthRequest="128"
+                                                HeightRequest="128"
+                                                StrokeThickness="0"
+                                                BackgroundColor="#101C36">
+                                            <Border.StrokeShape>
+                                                <RoundRectangle CornerRadius="8" />
+                                            </Border.StrokeShape>
+
+                                            <Grid HorizontalOptions="Center" VerticalOptions="Center">
+                                                <Ellipse WidthRequest="104" HeightRequest="104"
+                                                         HorizontalOptions="Center" VerticalOptions="Center"
+                                                         Stroke="{StaticResource HomeGold}" StrokeThickness="1" />
+                                                <Rectangle WidthRequest="66" HeightRequest="66"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                                           Stroke="{StaticResource HomeGold}" StrokeThickness="1.6" />
+                                                <Rectangle WidthRequest="66" HeightRequest="66" Rotation="45"
+                                                           HorizontalOptions="Center" VerticalOptions="Center"
+                                                           Stroke="{StaticResource HomeGold}" StrokeThickness="1.6" />
+                                                <Ellipse WidthRequest="8" HeightRequest="8"
+                                                         HorizontalOptions="Center" VerticalOptions="Center"
+                                                         Fill="{StaticResource HomeGold}" />
+                                            </Grid>
+                                        </Border>
+
+                                        <Label Text="{Binding PlaylistName}"
+                                               Style="{StaticResource CardTitle}"
+                                               Margin="0,6,0,0" />
+
+                                        <Label Text="{Binding Admin.Name}"
+                                               Style="{StaticResource CardSubtitle}" />
+                                    </VerticalStackLayout>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </VerticalStackLayout>
+
                 </VerticalStackLayout>
-
-                <!-- ===== Shelf: Playlists ===== -->
-                <VerticalStackLayout Spacing="12">
-
-                    <Label Text="Playlists" Style="{StaticResource ShelfTitle}" />
-
-                    <CollectionView ItemsSource="{Binding Playlists}"
-                                    HeightRequest="176"
-                                    HorizontalScrollBarVisibility="Never">
-
-                        <CollectionView.ItemsLayout>
-                            <LinearItemsLayout Orientation="Horizontal" ItemSpacing="12" />
-                        </CollectionView.ItemsLayout>
-
-                        <CollectionView.EmptyView>
-                            <Label Text="No playlists yet."
-                                   Style="{StaticResource EmptyText}" />
-                        </CollectionView.EmptyView>
-
-                        <CollectionView.ItemTemplate>
-                            <DataTemplate x:DataType="model:Playlist">
-                                <VerticalStackLayout WidthRequest="128" Spacing="2">
-
-                                    <VerticalStackLayout.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:HomeViewModel}}, Path=OpenPlaylistCommand}"
-                                            CommandParameter="{Binding .}" />
-                                    </VerticalStackLayout.GestureRecognizers>
-
-                                    <!-- Playlists have no cover image, so a gold geometric star is drawn instead -->
-                                    <Border WidthRequest="128"
-                                            HeightRequest="128"
-                                            StrokeThickness="0"
-                                            BackgroundColor="#101C36">
-                                        <Border.StrokeShape>
-                                            <RoundRectangle CornerRadius="8" />
-                                        </Border.StrokeShape>
-
-                                        <Grid HorizontalOptions="Center" VerticalOptions="Center">
-                                            <Ellipse WidthRequest="104" HeightRequest="104"
-                                                     HorizontalOptions="Center" VerticalOptions="Center"
-                                                     Stroke="{StaticResource HomeGold}" StrokeThickness="1" />
-                                            <Rectangle WidthRequest="66" HeightRequest="66"
-                                                       HorizontalOptions="Center" VerticalOptions="Center"
-                                                       Stroke="{StaticResource HomeGold}" StrokeThickness="1.6" />
-                                            <Rectangle WidthRequest="66" HeightRequest="66" Rotation="45"
-                                                       HorizontalOptions="Center" VerticalOptions="Center"
-                                                       Stroke="{StaticResource HomeGold}" StrokeThickness="1.6" />
-                                            <Ellipse WidthRequest="8" HeightRequest="8"
-                                                     HorizontalOptions="Center" VerticalOptions="Center"
-                                                     Fill="{StaticResource HomeGold}" />
-                                        </Grid>
-                                    </Border>
-
-                                    <Label Text="{Binding PlaylistName}"
-                                           Style="{StaticResource CardTitle}"
-                                           Margin="0,6,0,0" />
-
-                                    <Label Text="{Binding Admin.Name}"
-                                           Style="{StaticResource CardSubtitle}" />
-                                </VerticalStackLayout>
-                            </DataTemplate>
-                        </CollectionView.ItemTemplate>
-                    </CollectionView>
-                </VerticalStackLayout>
-
-            </VerticalStackLayout>
-        </ScrollView>
-    </RefreshView>
+            </ScrollView>
+        </RefreshView>
+    </Grid>
 </ContentPage>
